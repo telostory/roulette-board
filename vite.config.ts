@@ -7,8 +7,18 @@ export default defineConfig({
   base: '/roulette-board/',
   build: {
     outDir: 'dist',
+    sourcemap: false,
+    minify: 'terser',
     assetsDir: 'assets',
-    emptyOutDir: true,
-    sourcemap: false
+    assetsInlineLimit: 4096,
+    cssCodeSplit: true,
+    chunkSizeWarningLimit: 500,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', '@emotion/react', '@emotion/styled', 'framer-motion'],
+        }
+      }
+    }
   }
 })
