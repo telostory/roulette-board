@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import ReactConfetti from 'react-confetti';
 
 interface RouletteProps {
   options: string[];
@@ -66,7 +67,7 @@ const Pointer = styled.div`
   transform: translateX(-50%);
   width: 40px;
   height: 40px;
-  background: #40C4AA;
+  background: #C0C0C0;
   clip-path: polygon(50% 100%, 0 0, 100% 0);
   z-index: 1;
   
@@ -77,7 +78,7 @@ const Pointer = styled.div`
     left: 2px;
     right: 2px;
     bottom: 1px;
-    background: #4CD6BA;
+    background: #D3D3D3;
     clip-path: polygon(50% 98%, 2px 2px, calc(100% - 2px) 2px);
     z-index: 2;
   }
@@ -89,10 +90,7 @@ const Pointer = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    box-shadow: 
-      0 4px 8px rgba(64, 196, 170, 0.3),
-      0 -2px 4px rgba(255, 255, 255, 0.4) inset,
-      0 2px 4px rgba(0, 0, 0, 0.2) inset;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
     clip-path: polygon(50% 100%, 0 0, 100% 0);
     z-index: 3;
   }
@@ -129,6 +127,63 @@ const Button = styled.button`
   }
 `;
 
+const ResultOverlay = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+`;
+
+const ResultContainer = styled(motion.div)`
+  background: linear-gradient(135deg, #FFF0F3, #FFE5EC);
+  padding: 2rem;
+  border-radius: 20px;
+  text-align: center;
+  max-width: 80%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+`;
+
+const ResultTitle = styled.h2`
+  margin: 0 0 1rem;
+  color: #FF8BA7;
+  font-size: 1.5rem;
+`;
+
+const ResultText = styled.div`
+  color: #40C4AA;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 1rem 0;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+`;
+
+const CloseButton = styled.button`
+  background: #40C4AA;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 0.8rem 2rem;
+  margin-top: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #4CD6BA;
+    transform: translateY(-2px);
+  }
+`;
+
 const colors = [
   '#FFB3C6',  // 연한 핑크
   '#FF8BA7',  // 진한 핑크
@@ -145,17 +200,57 @@ const colors = [
 const Roulette: React.FC<RouletteProps> = ({ options }) => {
   const [isSpinning, setIsSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
+  const [winner, setWinner] = useState<string | null>(null);
+  const [showResult, setShowResult] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const spinWheel = () => {
     if (isSpinning || options.length === 0) return;
     
     setIsSpinning(true);
-    const newRotation = rotation + 1800 + Math.random() * 360;
+    setWinner(null);
+    setShowResult(false);
+    setShowConfetti(false);
+    
+    // 룰렛이 최소 5바퀴(1800도)는 돌도록 설정
+    const spinAngle = 1800 + Math.random() * 360;
+    const newRotation = rotation + spinAngle;
     setRotation(newRotation);
 
     setTimeout(() => {
+      // 당첨 결과 계산 (룰렛은 시계 방향으로 회전하므로 360에서 정규화된 각도를 빼서 계산)
+      const sectionAngle = 360 / options.length;
+      const normalizedRotation = newRotation % 360;
+      // 포인터는 위쪽(0도)에 있고, 룰렛이 시계 방향으로 회전하므로 계산 방식 변경
+      const winnerIndex = Math.floor((360 - normalizedRotation) / sectionAngle) % options.length;
+      const selectedOption = options[winnerIndex];
+      
+      setWinner(selectedOption);
+      setShowResult(true);
+      setShowConfetti(true);
       setIsSpinning(false);
-    }, 5000);
+    }, 5000); // 5초 후에 결과 표시
+  };
+
+  const closeResult = () => {
+    setShowResult(false);
+    setShowConfetti(false);
   };
 
   const sectionAngle = 360 / Math.max(options.length, 1);
@@ -175,6 +270,16 @@ const Roulette: React.FC<RouletteProps> = ({ options }) => {
 
   return (
     <RouletteContainer>
+      {showConfetti && (
+        <ReactConfetti
+          width={windowSize.width}
+          height={windowSize.height}
+          recycle={false}
+          numberOfPieces={200}
+          gravity={0.2}
+        />
+      )}
+
       <WheelContainer>
         <Pointer />
         <Wheel
@@ -204,6 +309,27 @@ const Roulette: React.FC<RouletteProps> = ({ options }) => {
       >
         {isSpinning ? '돌리는 중...' : options.length === 0 ? '옵션을 추가하세요' : '돌리기'}
       </Button>
+      
+      <AnimatePresence>
+        {showResult && winner && (
+          <ResultOverlay
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <ResultContainer
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.5, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            >
+              <ResultTitle>🎉 당첨 결과 🎉</ResultTitle>
+              <ResultText>{winner}</ResultText>
+              <CloseButton onClick={closeResult}>닫기</CloseButton>
+            </ResultContainer>
+          </ResultOverlay>
+        )}
+      </AnimatePresence>
     </RouletteContainer>
   );
 };

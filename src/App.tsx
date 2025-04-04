@@ -185,7 +185,7 @@ function App() {
 
   return (
     <Container>
-      <Title>행운의 룰렛</Title>
+      <Title>돌려돌려 돌림판</Title>
       <Roulette options={options} />
       <ContentContainer>
         <InputContainer>
