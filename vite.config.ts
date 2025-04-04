@@ -9,6 +9,13 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     minify: 'terser',
-    assetsDir: 'assets'
+    assetsDir: 'assets',
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/main.js',
+        chunkFileNames: 'assets/[name].js',
+        assetFileNames: 'assets/[name].[ext]'
+      }
+    }
   }
 })

@@ -2,22 +2,18 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>행운의 룰렛</title>
-  <script type="text/javascript">
-    // GitHub Pages에서 SPA 라우팅 처리를 위한 리다이렉션
-    var pathSegmentsToKeep = 1;
-
-    var l = window.location;
-    l.replace(
-      l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-      l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
-      l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
-      (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-      l.hash
-    );
-
+  <script>
+    // GitHub Pages에서 SPA 라우팅을 위한 리다이렉트
+    const redirectURL = location.hostname.includes('github.io') 
+      ? `/roulette-board/` 
+      : '/';
+    
+    window.location.replace(redirectURL);
   </script>
 </head>
 <body>
+  <p>리다이렉팅 중...</p>
 </body>
 </html> 
