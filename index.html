@@ -2,24 +2,12 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/roulette-board/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>행운의 룰렛</title>
-    <script type="text/javascript">
-      // SPA 앱을 GitHub Pages에서 리다이렉션하기 위한 스크립트
-      (function() {
-        // GitHub Pages 도메인에서만 실행
-        if (window.location.hostname.indexOf('github.io') !== -1) {
-          const match = window.location.pathname.match(/^\/roulette-board\/?(?:\/+)?(.*)$/);
-          if (match && match[1]) {
-            history.replaceState(null, null, `/roulette-board/?path=${match[1]}`);
-          }
-        }
-      })();
-    </script>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/roulette-board/assets/main.js"></script>
+    <script type="module" src="index.js"></script>
   </body>
 </html>
