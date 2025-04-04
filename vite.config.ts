@@ -17,5 +17,10 @@ export default defineConfig({
         assetFileNames: 'assets/[name].[ext]'
       }
     }
+  },
+  server: {
+    headers: {
+      'Content-Type': 'text/javascript'
+    }
   }
 })
