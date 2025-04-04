@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>리디렉션 중...</title>
+  <script type="text/javascript">
+    // SPA 페이지를 위한 GitHub Pages 404 해결책
+    // 모든 경로를 메인 페이지로 리디렉션하고 클라이언트 라우팅이 처리하도록 함
+    (function() {
+      var segmentCount = 1;  // 프로젝트가 username.github.io/roulette-board 형태이므로 segmentCount는 1
+      var l = window.location;
+      
+      // GitHub Pages는 404 페이지를 표시할 때 경로를 유지함
+      // 기본 URL로 리디렉션하되, 원래 경로를 보존하지 않음
+      l.replace(
+        l.protocol + '//' + l.hostname + 
+        (l.port ? ':' + l.port : '') + 
+        '/roulette-board/'
+      );
+    })();
+  </script>
+</head>
+<body>
+  <p>페이지로 리디렉션 중입니다...</p>
+</body>
+</html> 
