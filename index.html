@@ -45,7 +45,7 @@
       text-align: center;
       max-width: 550px;
       width: 100%;
-      padding: 2rem;
+      padding: 1rem;
       animation: fadeIn 0.8s ease-out;
     }
     
@@ -375,6 +375,119 @@
       z-index: 999;
       pointer-events: none;
     }
+    
+    /* 모바일 최적화 스타일 */
+    @media (max-width: 768px) {
+      :root {
+        --roulette-size: 260px;
+      }
+      
+      body {
+        padding-top: 20px;
+      }
+      
+      .container {
+        padding: 0.5rem;
+      }
+      
+      .card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+      
+      .main-title {
+        font-size: 1.5rem !important;
+        margin-bottom: 1rem;
+        white-space: nowrap;
+      }
+      
+      .roulette {
+        margin: 1rem auto;
+      }
+      
+      .spin-button {
+        min-width: 100px;
+        height: 44px;
+        font-size: 1.1rem;
+      }
+      
+      .input-container {
+        margin-bottom: 0.5rem;
+      }
+      
+      .button-container {
+        position: static !important;
+        transform: none !important;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 0.5rem;
+      }
+      
+      .input {
+        padding-right: 1rem;
+        width: 100%;
+      }
+      
+      .copyright {
+        bottom: 0.5rem;
+        font-size: 0.7rem;
+      }
+      
+      .option-item {
+        padding: 8px 10px;
+        margin-bottom: 6px;
+        font-size: 0.9rem;
+      }
+      
+      .result-title {
+        font-size: 20px !important;
+      }
+      
+      .result-text {
+        font-size: 24px !important;
+      }
+      
+      .modal-content {
+        padding: 20px !important;
+        max-width: 90% !important;
+      }
+      
+      .button.is-rounded {
+        font-size: 0.8rem;
+        height: 2.2rem;
+      }
+      
+      .button.add-button, 
+      .button.reset-button {
+        height: 2.2rem;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+      }
+      
+      .input {
+        height: 2.5rem;
+        font-size: 0.9rem;
+        padding-right: 1rem;
+        width: 100%;
+      }
+    }
+    
+    /* 작은 모바일 화면용 추가 스타일 */
+    @media (max-width: 400px) {
+      :root {
+        --roulette-size: 220px;
+      }
+      
+      .main-title {
+        font-size: 1.3rem !important;
+      }
+      
+      .section-text {
+        font-size: 12px;
+        max-width: 80px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -399,13 +512,13 @@
       
       <!-- 옵션 입력 섹션 -->
       <div class="field">
-        <div class="control has-icons-right" style="position: relative;">
+        <div class="control input-container" style="position: relative;">
           <input class="input" type="text" id="option-input" placeholder="옵션을 입력하세요 (최대 10개)" maxlength="20">
-          <div style="position: absolute; right: 0.5rem; top: 0.3rem; display: flex; gap: 8px;">
-            <button class="button is-primary is-rounded add-button" id="add-option" style="position: static; height: 2.4rem;">
+          <div class="button-container" style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); display: flex; gap: 8px;">
+            <button class="button is-primary is-rounded add-button" id="add-option">
               <span>추가</span>
             </button>
-            <button class="button reset-button is-rounded" id="reset-options" style="position: static; height: 2.4rem; margin-top: 0;">초기화</button>
+            <button class="button reset-button is-rounded" id="reset-options">초기화</button>
           </div>
         </div>
       </div>
@@ -417,7 +530,7 @@
   </div>
   
   <!-- 카피라이트 추가 -->
-  <div class="copyright" style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: rgba(73, 57, 44, 0.6); position: fixed; bottom: 1rem; width: 100%; left: 0; background: transparent;">
+  <div class="copyright" style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: rgba(73, 57, 44, 0.6); position: fixed; bottom: 1rem; width: 100%; left: 0; background: transparent; z-index: 10;">
     © 2025 telo All rights reserved.
   </div>
   
