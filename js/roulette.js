@@ -19,10 +19,9 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // 초기 돌림판 상태 - 비어있는 상태
   roulette.style.background = '#e0e0e0'; // 회색 배경으로 시작
+  spinButton.setAttribute('aria-busy', 'false');
   spinButton.disabled = true; // 옵션이 없을 때는 버튼 비활성화
-  spinButton.style.opacity = '0.5';
   resetButton.disabled = true; // 초기화 버튼도 비활성화
-  resetButton.style.opacity = '0.5';
   
   // 모달 닫기 버튼 이벤트 - null 체크 추가
   if (closeModalButton && resultModal) {
@@ -64,6 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     spinning = true;
+    spinButton.setAttribute('aria-busy', 'true');
     
     // 회전값 초기화 - 매번 새롭게 회전하도록 수정
     // 각도 계산 (랜덤한 추가 회전 + 랜덤 각도)
@@ -115,10 +115,12 @@ document.addEventListener('DOMContentLoaded', function() {
           alert(`결과: ${userOptions[selectedIndex]}`);
         }
         
+        spinButton.setAttribute('aria-busy', 'false');
         spinning = false;
       }, spinTime * 1000); // 회전 시간에 맞춰 타이머 설정
     } catch (error) {
       console.error('돌림판 회전 중 오류 발생:', error);
+      spinButton.setAttribute('aria-busy', 'false');
       spinning = false;
     }
   });
@@ -147,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
       particleCount: 150,
       spread: 160,
       origin: { y: 0.6 },
-      colors: ['#FF6B6B', '#4ECDC4', '#FFE66D', '#1A535C', '#FF9F1C'],
+      colors: ['#4361EE', '#F72585', '#4CC9F0', '#560BAD', '#F8961E'],
       disableForReducedMotion: true
     });
     
@@ -158,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
         angle: 60,
         spread: 55,
         origin: { x: 0 },
-        colors: ['#FF6B6B', '#4ECDC4', '#FFE66D']
+        colors: ['#4361EE', '#F72585', '#4CC9F0']
       });
       
       myConfetti({
@@ -166,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
         angle: 120,
         spread: 55,
         origin: { x: 1 },
-        colors: ['#1A535C', '#FF9F1C', '#4ECDC4']
+        colors: ['#560BAD', '#F8961E', '#4CC9F0']
       });
     }, 1000);
   }
@@ -176,9 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
     roulette.style.background = '#e0e0e0'; // 회색 배경으로 시작
     roulette.innerHTML = ''; // 모든 텍스트 제거
     spinButton.disabled = true; // 옵션이 없을 때는 버튼 비활성화
-    spinButton.style.opacity = '0.5';
     resetButton.disabled = true; // 초기화 버튼도 비활성화
-    resetButton.style.opacity = '0.5';
   }
   
   // 옵션 추가 함수
@@ -195,9 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // 첫 번째 옵션이 추가되면 버튼들 활성화
         if (userOptions.length === 1) {
           spinButton.disabled = false;
-          spinButton.style.opacity = '1';
           resetButton.disabled = false;
-          resetButton.style.opacity = '1';
         }
       } else {
         alert('이미 동일한 옵션이 있습니다!');
@@ -237,9 +235,7 @@ document.addEventListener('DOMContentLoaded', function() {
           // 모든 옵션이 삭제되면 버튼들 비활성화
           if (userOptions.length === 0) {
             spinButton.disabled = true;
-            spinButton.style.opacity = '0.5';
             resetButton.disabled = true;
-            resetButton.style.opacity = '0.5';
             initEmptyRoulette();
             optionsList.style.display = 'none'; // 옵션 목록 숨김
           }
@@ -262,10 +258,13 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     
-    // 돌림판의 배경 그라데이션 설정
+    spinButton.disabled = false;
+    resetButton.disabled = false;
+    
+    // 색상 배열 - 각 섹션에 다른 색상 적용
     const colors = [
-      '#FF6B6B', '#4ECDC4', '#FFE66D', '#1A535C', '#FF9F1C', 
-      '#6A0572', '#AB83A1', '#F15BB5', '#00BBF9', '#00F5D4'
+      '#4361EE', '#F72585', '#4CC9F0', '#560BAD', '#F8961E',
+      '#43AA8B', '#277DA1', '#F94144', '#90BE6D', '#4D908E'
     ];
     
     // 기존 텍스트 요소 제거
@@ -298,9 +297,6 @@ document.addEventListener('DOMContentLoaded', function() {
       // 각 섹션의 중앙에 텍스트 배치
       const midAngle = startAngle + segmentSize / 2;
       const radialPosition = 90; // 중심에서 텍스트까지의 거리 (120에서 90으로 수정)
-      
-      // 이미지와 같이 텍스트를 단순히 세로로 표시
-      // 섹션 위치로 회전 후 텍스트만 90도 회전
       
       // 텍스트 배치 및 회전 조정 - 세로로 90도 회전
       textElement.style.transform = `

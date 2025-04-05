@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,33 +7,56 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>🎡 돌려돌려 돌림판 🎲</title>
+  <!-- Pico.css -->
+  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.5.10/css/pico.min.css">
   <style>
+    :root {
+      --primary: #4361ee;
+      --primary-hover: #3a56d4;
+      --primary-focus: rgba(67, 97, 238, 0.25);
+      --primary-inverse: #FFF;
+      --secondary: #f72585;
+      --secondary-hover: #df2178;
+      --roulette-size: 300px;
+    }
+    
+    [data-theme="dark"] {
+      --primary: #4cc9f0;
+      --primary-hover: #33b8e0;
+      --primary-focus: rgba(76, 201, 240, 0.25);
+      --primary-inverse: #FFF;
+    }
+    
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       display: flex;
       justify-content: center;
       align-items: flex-start;
       min-height: 100vh;
       margin: 0;
-      background-color: #f5f5f5;
       padding-top: 40px;
+    }
+    
+    main {
+      padding: 0;
+      margin-bottom: 40px;
     }
     
     .container {
       text-align: center;
-      padding: 20px;
-      border-radius: 10px;
-      background-color: white;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       max-width: 500px;
       width: 100%;
     }
     
+    h1 {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
     .roulette {
       position: relative;
-      width: 300px;
-      height: 300px;
-      margin: 20px auto;
+      width: var(--roulette-size);
+      height: var(--roulette-size);
+      margin: 30px auto;
     }
     
     .roulette-bg {
@@ -47,20 +70,22 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     }
     
     .roulette:after {
       content: "";
       position: absolute;
-      top: -10px;
+      top: -15px;
       left: 50%;
       transform: translateX(-50%);
       width: 0;
       height: 0;
-      border-left: 10px solid transparent;
-      border-right: 10px solid transparent;
-      border-top: 20px solid #ff4757;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-top: 25px solid var(--secondary);
       z-index: 10;
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
     }
     
     .roulette-center {
@@ -74,95 +99,75 @@
       transform: translate(-50%, -50%);
       z-index: 2;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      border: 4px solid rgba(255, 255, 255, 0.8);
     }
     
     button {
-      background-color: #4ECDC4;
-      border: none;
-      color: white;
-      padding: 12px 24px;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      margin: 5px;
+      margin-bottom: 0;
     }
     
-    button:hover {
-      background-color: #1A535C;
+    button.secondary {
+      --primary: var(--secondary);
+      --primary-hover: var(--secondary-hover);
+      --primary-focus: rgba(247, 37, 133, 0.25);
     }
     
-    .reset-btn {
-      background-color: #FF6B6B;
-    }
-    
-    .reset-btn:hover {
-      background-color: #ee5253;
-    }
-    
-    .result {
-      margin-top: 20px;
-      font-size: 18px;
-      min-height: 27px;
-    }
-    
-    .options-form {
-      margin-top: 30px;
-      margin-bottom: 20px;
-    }
-    
-    .option-input {
+    .input-group {
       display: flex;
-      margin-bottom: 10px;
-      justify-content: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      align-items: stretch;
     }
     
-    .option-input input {
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      width: 70%;
-      margin-right: 10px;
+    .input-group > input {
+      flex: 1;
+      margin-bottom: 0;
     }
     
-    .option-input button {
-      padding: 8px 15px;
+    .input-group > button {
+      margin: 0;
     }
     
     .options-list {
       max-height: 200px;
       overflow-y: auto;
-      margin: 10px 0;
-      padding: 10px;
-      border: 1px solid #eee;
-      border-radius: 5px;
-      background-color: #f9f9f9;
+      margin: 15px 0;
+      padding: 15px;
+      border-radius: 8px;
+      background-color: rgba(0, 0, 0, 0.03);
       display: none; /* 초기에는 숨김 처리 */
     }
     
     .option-item {
       display: flex;
       justify-content: space-between;
-      padding: 5px;
-      border-bottom: 1px solid #eee;
+      align-items: center;
+      padding: 10px;
+      margin-bottom: 8px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    [data-theme="dark"] .option-item {
+      background-color: var(--card-background-color);
     }
     
     .option-item:last-child {
-      border-bottom: none;
+      margin-bottom: 0;
     }
     
     .remove-btn {
-      background-color: #ff6b6b;
-      color: white;
+      padding: 0.5em 1em;
+      background: none;
+      color: var(--secondary);
       border: none;
-      border-radius: 3px;
-      cursor: pointer;
-      padding: 2px 6px;
-      font-size: 12px;
+      box-shadow: none;
     }
     
     .remove-btn:hover {
-      background-color: #ee5253;
+      text-decoration: underline;
+      background: none;
     }
     
     .section-text {
@@ -185,13 +190,6 @@
       line-height: 1.2;
     }
     
-    .button-container {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 20px;
-    }
-    
     /* 결과 모달 스타일 */
     .result-modal {
       display: none;
@@ -205,14 +203,15 @@
       justify-content: center;
       align-items: center;
       animation: fadeIn 0.3s ease-in-out;
+      backdrop-filter: blur(5px);
     }
     
     .result-content {
-      background-color: white;
-      padding: 30px 50px;
-      border-radius: 15px;
+      background-color: var(--card-background-color);
+      padding: 40px;
+      border-radius: 20px;
       text-align: center;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
       max-width: 80%;
       animation: scaleIn 0.5s ease-in-out;
     }
@@ -220,20 +219,33 @@
     .result-title {
       font-size: 24px;
       margin-bottom: 10px;
-      color: #1A535C;
+      color: var(--primary);
     }
     
     .result-text {
       font-size: 32px;
       font-weight: bold;
       margin: 20px 0;
-      color: #FF6B6B;
+      color: var(--secondary);
       word-break: keep-all;
     }
     
-    .close-modal {
-      background-color: #4ECDC4;
-      margin-top: 15px;
+    .theme-switcher {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 20px;
+      border: none;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
     
     @keyframes fadeIn {
@@ -265,32 +277,37 @@
   </style>
 </head>
 <body>
-  <div class="container">
+  <main class="container">
     <h1>🎡 돌려돌려 돌림판 🎲</h1>
     
-    <!-- 돌림판 섹션 -->
-    <div class="roulette">
-      <div class="roulette-bg" id="roulette"></div>
-      <div class="roulette-center"></div>
-    </div>
-    
-    <div class="button-container">
-      <button id="spin">돌리기</button>
-    </div>
-    
-    <!-- 옵션 입력 섹션 (하단으로 이동) -->
-    <div class="options-form">
-      <div class="option-input">
+    <!-- 옵션 입력 섹션 -->
+    <article>
+      <div class="input-group">
         <input type="text" id="option-input" placeholder="옵션을 입력하세요 (최대 10개)" maxlength="20">
         <button id="add-option">추가</button>
-        <button id="reset-options" class="reset-btn">초기화</button>
+        <button id="reset-options" class="secondary">초기화</button>
       </div>
       
       <div class="options-list" id="options-list">
         <!-- 옵션 목록이 여기에 표시됩니다 -->
       </div>
-    </div>
-  </div>
+    </article>
+    
+    <!-- 돌림판 섹션 -->
+    <article>
+      <div class="roulette">
+        <div class="roulette-bg" id="roulette"></div>
+        <div class="roulette-center"></div>
+      </div>
+      
+      <div class="button-container">
+        <button id="spin">돌리기</button>
+      </div>
+    </article>
+  </main>
+  
+  <!-- 테마 전환 버튼 -->
+  <button class="theme-switcher" id="theme-switcher">🌓</button>
   
   <!-- 결과 모달 -->
   <div class="result-modal" id="result-modal">
@@ -307,5 +324,32 @@
   <!-- 외부 자바스크립트 파일 참조 -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script src="./js/roulette.js"></script>
+  <script>
+    // 테마 전환 기능
+    document.addEventListener('DOMContentLoaded', function() {
+      const themeSwitcher = document.getElementById('theme-switcher');
+      
+      // 저장된 테마 확인
+      const savedTheme = localStorage.getItem('rouletteTheme');
+      if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      } else {
+        // 시스템 테마 감지
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        if (prefersDarkScheme.matches) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      }
+      
+      // 테마 전환 클릭 이벤트
+      themeSwitcher.addEventListener('click', function() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('rouletteTheme', newTheme);
+      });
+    });
+  </script>
 </body>
 </html>
