@@ -13,21 +13,37 @@ document.addEventListener('DOMContentLoaded', function() {
   const resultModal = document.getElementById('result-modal');
   const resultText = document.getElementById('result-text');
   const closeModalButton = document.getElementById('close-modal');
+  const modalBackground = document.querySelector('.modal-background');
+  const modalClose = document.querySelector('.modal-close');
   
   let userOptions = [];
   let spinning = false;
   
   // 초기 돌림판 상태 - 비어있는 상태
   roulette.style.background = '#e0e0e0'; // 회색 배경으로 시작
-  spinButton.setAttribute('aria-busy', 'false');
   spinButton.disabled = true; // 옵션이 없을 때는 버튼 비활성화
+  spinButton.classList.add('is-loading', 'is-outlined');
+  spinButton.classList.remove('is-loading');
   resetButton.disabled = true; // 초기화 버튼도 비활성화
   
-  // 모달 닫기 버튼 이벤트 - null 체크 추가
-  if (closeModalButton && resultModal) {
-    closeModalButton.addEventListener('click', function() {
-      resultModal.style.display = 'none';
-    });
+  // 모달 창 닫기 (여러 방법 지원)
+  function closeModal() {
+    resultModal.classList.remove('is-active');
+  }
+  
+  // 모달 닫기 버튼 이벤트
+  if (closeModalButton) {
+    closeModalButton.addEventListener('click', closeModal);
+  }
+  
+  // 모달 배경 클릭 시 닫기
+  if (modalBackground) {
+    modalBackground.addEventListener('click', closeModal);
+  }
+  
+  // 모달 X 버튼 클릭 시 닫기
+  if (modalClose) {
+    modalClose.addEventListener('click', closeModal);
   }
   
   // 옵션 추가 버튼 클릭 이벤트
@@ -42,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // 초기화 버튼 클릭 이벤트 - 컨펌 제거
+  // 초기화 버튼 클릭 이벤트
   resetButton.addEventListener('click', function() {
     if (spinning) return; // 회전 중에는 초기화 불가
     if (userOptions.length === 0) return; // 이미 비어있으면 아무 작업도 하지 않음
@@ -58,12 +74,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (spinning) return;
     
     if (userOptions.length === 0) {
-      alert('최소 1개 이상의 옵션을 추가해주세요!');
+      // Bulma 알림창 스타일
+      showNotification('최소 1개 이상의 옵션을 추가해주세요!', 'is-warning');
       return;
     }
     
     spinning = true;
-    spinButton.setAttribute('aria-busy', 'true');
+    spinButton.classList.add('is-loading');
+    spinButton.disabled = true;
     
     // 회전값 초기화 - 매번 새롭게 회전하도록 수정
     // 각도 계산 (랜덤한 추가 회전 + 랜덤 각도)
@@ -112,27 +130,72 @@ document.addEventListener('DOMContentLoaded', function() {
         if (resultModal && resultText) {
           showResultWithAnimation(userOptions[selectedIndex]);
         } else {
-          alert(`결과: ${userOptions[selectedIndex]}`);
+          showNotification(`결과: ${userOptions[selectedIndex]}`, 'is-success');
         }
         
-        spinButton.setAttribute('aria-busy', 'false');
+        spinButton.classList.remove('is-loading');
+        spinButton.disabled = false;
         spinning = false;
       }, spinTime * 1000); // 회전 시간에 맞춰 타이머 설정
     } catch (error) {
       console.error('돌림판 회전 중 오류 발생:', error);
-      spinButton.setAttribute('aria-busy', 'false');
+      spinButton.classList.remove('is-loading');
+      spinButton.disabled = false;
       spinning = false;
+      showNotification('돌림판 회전 중 오류가 발생했습니다. 다시 시도해주세요.', 'is-danger');
     }
   });
+  
+  // Bulma 스타일 알림창 표시
+  function showNotification(message, type = 'is-info') {
+    // 이미 있는 알림창 제거
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(item => item.remove());
+    
+    // 새 알림창 생성
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.style.position = 'fixed';
+    notification.style.top = '20px';
+    notification.style.right = '20px';
+    notification.style.maxWidth = '300px';
+    notification.style.zIndex = '9999';
+    notification.style.boxShadow = '0 3px 10px rgba(0,0,0,0.2)';
+    notification.style.borderRadius = '6px';
+    notification.style.animation = 'slideIn 0.3s ease-out forwards';
+    
+    // 닫기 버튼 추가
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'delete';
+    closeBtn.addEventListener('click', function() {
+      document.body.removeChild(notification);
+    });
+    
+    notification.appendChild(closeBtn);
+    notification.appendChild(document.createTextNode(message));
+    document.body.appendChild(notification);
+    
+    // 3초 후 자동 제거
+    setTimeout(() => {
+      if (document.body.contains(notification)) {
+        notification.style.animation = 'slideOut 0.3s ease-in forwards';
+        setTimeout(() => {
+          if (document.body.contains(notification)) {
+            document.body.removeChild(notification);
+          }
+        }, 300);
+      }
+    }, 3000);
+  }
   
   // 결과 애니메이션 표시 함수
   function showResultWithAnimation(selectedOption) {
     // 모달에 결과 표시
     resultText.textContent = selectedOption;
     
-    // 0.5초 후에 모달 표시 (회전이 완전히 끝난 후)
+    // 모달 표시 (Bulma 스타일)
     setTimeout(() => {
-      resultModal.style.display = 'flex';
+      resultModal.classList.add('is-active');
       
       // 콘페티 효과 실행
       launchConfetti();
@@ -144,12 +207,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const canvas = document.getElementById('confetti-canvas');
     const myConfetti = confetti.create(canvas, { resize: true });
     
-    // 콘페티 효과 설정
+    // 더 화려한 콘페티 효과 설정
     myConfetti({
       particleCount: 150,
       spread: 160,
       origin: { y: 0.6 },
-      colors: ['#4361EE', '#F72585', '#4CC9F0', '#560BAD', '#F8961E'],
+      colors: ['#FF3860', '#3273DC', '#FFD166', '#23D160', '#209CEE'],
       disableForReducedMotion: true
     });
     
@@ -160,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
         angle: 60,
         spread: 55,
         origin: { x: 0 },
-        colors: ['#4361EE', '#F72585', '#4CC9F0']
+        colors: ['#FF3860', '#3273DC', '#FFD166']
       });
       
       myConfetti({
@@ -168,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
         angle: 120,
         spread: 55,
         origin: { x: 1 },
-        colors: ['#560BAD', '#F8961E', '#4CC9F0']
+        colors: ['#209CEE', '#FFD166', '#23D160']
       });
     }, 1000);
   }
@@ -187,6 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (optionText && userOptions.length < 10) {
       if (!userOptions.includes(optionText)) {
+        // 옵션 추가 애니메이션 효과
         userOptions.push(optionText);
         renderOptionsList();
         updateRoulette(); // 옵션 추가 시 즉시 돌림판 업데이트
@@ -198,12 +262,12 @@ document.addEventListener('DOMContentLoaded', function() {
           resetButton.disabled = false;
         }
       } else {
-        alert('이미 동일한 옵션이 있습니다!');
+        showNotification('이미 동일한 옵션이 있습니다!', 'is-warning');
       }
     } else if (userOptions.length >= 10) {
-      alert('최대 10개까지만 추가할 수 있습니다!');
+      showNotification('최대 10개까지만 추가할 수 있습니다!', 'is-warning');
     } else {
-      alert('옵션을 입력해주세요!');
+      showNotification('옵션을 입력해주세요!', 'is-warning');
     }
     
     optionInput.focus();
@@ -225,8 +289,8 @@ document.addEventListener('DOMContentLoaded', function() {
         optionText.textContent = option;
         
         const removeButton = document.createElement('button');
-        removeButton.className = 'remove-btn';
-        removeButton.textContent = '삭제';
+        removeButton.className = 'delete-button';
+        removeButton.innerHTML = '<i class="fas fa-times"></i>';
         removeButton.onclick = function() {
           userOptions.splice(index, 1);
           renderOptionsList();
@@ -261,10 +325,10 @@ document.addEventListener('DOMContentLoaded', function() {
     spinButton.disabled = false;
     resetButton.disabled = false;
     
-    // 색상 배열 - 각 섹션에 다른 색상 적용
+    // 색상 배열 - 각 섹션에 다른 색상 적용 (Bulma 색상)
     const colors = [
-      '#4361EE', '#F72585', '#4CC9F0', '#560BAD', '#F8961E',
-      '#43AA8B', '#277DA1', '#F94144', '#90BE6D', '#4D908E'
+      '#FF3860', '#3273DC', '#FFD166', '#23D160', '#209CEE',
+      '#6A67CE', '#FF9F43', '#00D1B2', '#F56565', '#667EEA'
     ];
     
     // 기존 텍스트 요소 제거
