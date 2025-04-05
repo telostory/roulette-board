@@ -207,12 +207,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const canvas = document.getElementById('confetti-canvas');
     const myConfetti = confetti.create(canvas, { resize: true });
     
-    // 더 화려한 콘페티 효과 설정 (모던한 색상으로 변경)
+    // 더 화려한 콘페티 효과 설정 (따뜻한 색상으로 변경)
     myConfetti({
       particleCount: 150,
       spread: 160,
       origin: { y: 0.6 },
-      colors: ['#5D5FEF', '#2A2B55', '#FFB74A', '#34D399', '#7C8EF4'],
+      colors: ['#FF7E5F', '#B85C38', '#FFD166', '#F9A26C', '#F76B3B'],
       disableForReducedMotion: true
     });
     
@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
         angle: 60,
         spread: 55,
         origin: { x: 0 },
-        colors: ['#FF5757', '#5D5FEF', '#FFB74A']
+        colors: ['#E15241', '#FF7E5F', '#FFD166']
       });
       
       myConfetti({
@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
         angle: 120,
         spread: 55,
         origin: { x: 1 },
-        colors: ['#7C8EF4', '#FFB74A', '#34D399']
+        colors: ['#F9A26C', '#FFD166', '#F76B3B']
       });
     }, 1000);
   }
@@ -336,10 +336,10 @@ document.addEventListener('DOMContentLoaded', function() {
     spinButton.disabled = false;
     resetButton.disabled = false;
     
-    // 색상 배열 - 각 섹션에 다른 색상 적용 (모던한 색상으로 변경)
+    // 색상 배열 - 각 섹션에 다른 색상 적용 (따뜻한 색상으로 변경)
     const colors = [
-      '#5D5FEF', '#2A2B55', '#FFB74A', '#34D399', '#7C8EF4',
-      '#A0A3BD', '#FF5757', '#9C6ADE', '#4AC0E0', '#FB7EA8'
+      '#FF7E5F', '#B85C38', '#FFD166', '#F9A26C', '#F76B3B',
+      '#E15241', '#FCAF58', '#DB644E', '#F08A5D', '#B44E3C'
     ];
     
     // 기존 텍스트 요소 제거
