@@ -59,8 +59,9 @@ document.addEventListener('DOMContentLoaded', function() {
       // 화살표 위치에서 어떤 세그먼트가 선택되었는지 계산
       // 화살표는 위(0도)에 고정되어 있고 돌림판이 시계방향으로 회전함
       let selectedIndex = Math.floor(finalAngle / segmentSize);
-      // 인덱스 반전 (시계 방향 회전, 반시계 방향 인덱스)
-      selectedIndex = (userOptions.length - selectedIndex) % userOptions.length;
+      // 인덱스 반전 제거 - 시계 방향 회전에 맞게 인덱스 계산
+      selectedIndex = userOptions.length - 1 - selectedIndex;
+      if (selectedIndex < 0) selectedIndex += userOptions.length;
       
       result.textContent = `결과: ${userOptions[selectedIndex]}!`;
       spinning = false;
@@ -179,14 +180,14 @@ document.addEventListener('DOMContentLoaded', function() {
       const midAngle = startAngle + segmentSize / 2;
       const radialPosition = 120; // 중심에서 텍스트까지의 거리
       
-      // 텍스트 방향 설정: 중심에서 바깥쪽으로 향하도록
-      // 모든 텍스트가 원의 중심에서 바깥을 향하게 설정
+      // 텍스트 방향 설정: 모든 텍스트가 동일한 방향(정방향)으로 표시
+      // 원의 중심에서 볼 때 텍스트가 항상 똑바로 보이도록 함
       
       // 텍스트 배치 및 회전 조정
       textElement.style.transform = `
         rotate(${midAngle}deg) 
         translateY(-${radialPosition}px) 
-        rotate(-${midAngle}deg)
+        rotate(${-midAngle}deg)
       `;
       
       roulette.appendChild(textElement);
