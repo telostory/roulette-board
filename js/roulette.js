@@ -63,9 +63,14 @@ document.addEventListener('DOMContentLoaded', function() {
     spinning = true;
     
     // 회전값 초기화 - 매번 새롭게 회전하도록 수정
-    // 각도 계산 (고정된 추가 회전 + 랜덤 각도)
+    // 각도 계산 (랜덤한 추가 회전 + 랜덤 각도)
     const randomDegrees = Math.floor(Math.random() * 360);
-    const extraRotation = 1800; // 추가 회전 (5바퀴)
+    
+    // 추가 회전을 랜덤하게 설정 (3바퀴에서 8바퀴 사이로 변경)
+    const minRotation = 3 * 360; // 최소 3바퀴
+    const maxRotation = 8 * 360; // 최대 8바퀴
+    const extraRotation = Math.floor(Math.random() * (maxRotation - minRotation + 1)) + minRotation;
+    
     const totalRotation = extraRotation + randomDegrees;
     
     // 돌림판 회전 - 가속도 효과 적용
