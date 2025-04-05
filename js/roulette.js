@@ -261,7 +261,18 @@ document.addEventListener('DOMContentLoaded', function() {
         userOptions = [...userOptions, ...optionsToAdd];
         renderOptionsList();
         updateRoulette(); // 옵션 추가 시 즉시 돌림판 업데이트
-        optionInput.value = '';
+        
+        // 한글 입력 문제 해결을 위한 수정 (입력창 초기화 및 포커스 처리)
+        // 1. 포커스 제거 후 값 초기화
+        optionInput.blur();
+        // 2. setTimeout으로 비동기 처리하여 한글 조합 완료 후 초기화
+        setTimeout(() => {
+          optionInput.value = '';
+          // 3. 약간의 지연 후 다시 포커스
+          setTimeout(() => {
+            optionInput.focus();
+          }, 50);
+        }, 10);
         
         // 옵션이 10개를 초과한 경우 알림
         if (options.length > availableSlots) {
@@ -279,8 +290,6 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       showNotification('옵션을 입력해주세요!', 'is-warning');
     }
-    
-    optionInput.focus();
   }
   
   // 옵션 목록 렌더링 함수
