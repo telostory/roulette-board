@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>돌려돌려 돌림판</title>
+  <title>테스트 돌림판</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -105,7 +105,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>돌려돌려 돌림판</h1>
+    <h1>테스트 돌림판</h1>
     <div class="roulette">
       <div class="roulette-bg" id="roulette"></div>
       <div class="roulette-center"></div>
@@ -114,7 +114,44 @@
     <div class="result" id="result"></div>
   </div>
 
-  <!-- 외부 자바스크립트 파일 참조 -->
-  <script src="./js/roulette.js"></script>
+  <script>
+    console.log('인라인 스크립트 실행');
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM Content Loaded - 인라인');
+      const roulette = document.getElementById('roulette');
+      const spinButton = document.getElementById('spin');
+      const result = document.getElementById('result');
+      const items = ['빨강', '청록', '노랑', '남색', '주황'];
+      let spinning = false;
+      let currentRotation = 0;
+      
+      spinButton.addEventListener('click', function() {
+        if (spinning) return;
+        spinning = true;
+        result.textContent = '';
+        
+        // 각도 계산 (이전 회전 값에 추가)
+        const randomDegrees = Math.floor(Math.random() * 360);
+        const extraRotation = 1800; // 추가 회전 (5바퀴)
+        const totalRotation = currentRotation + extraRotation + randomDegrees;
+        currentRotation = totalRotation;
+        
+        // 돌림판 회전
+        roulette.style.transform = `rotate(${totalRotation}deg)`;
+        
+        // 결과 계산 및 표시
+        setTimeout(() => {
+          const normalizedDegrees = randomDegrees;
+          const segmentSize = 360 / items.length;
+          let selectedIndex = Math.floor((360 - normalizedDegrees) / segmentSize);
+          if (selectedIndex >= items.length) selectedIndex = 0;
+          
+          result.textContent = `결과: ${items[selectedIndex]}!`;
+          spinning = false;
+        }, 3000);
+      });
+    });
+  </script>
 </body>
-</html>
+</html> 
