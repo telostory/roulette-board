@@ -104,9 +104,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1),
-                  inset 0 0 15px rgba(255, 255, 255, 0.5),
-                  inset 0 0 25px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     }
     
     .roulette:after {
@@ -166,7 +164,7 @@
       margin: 15px 0;
       padding: 15px;
       border-radius: 8px;
-      background-color: rgba(0, 0, 0, 0.03);
+      background-color: white;
       display: none; /* 초기에는 숨김 처리 */
     }
     
@@ -176,7 +174,7 @@
       align-items: center;
       padding: 10px 15px;
       margin-bottom: 8px;
-      background-color: white;
+      background-color: #f9f9fa;
       border-radius: 8px;
       box-shadow: 0 2px 3px rgba(0, 0, 0, 0.06);
       transition: all 0.2s ease;
@@ -239,6 +237,17 @@
     
     .button.is-info:hover {
       background-color: #2366d1;
+    }
+    
+    .button.is-danger {
+      background-color: #f5f5f5;
+      color: #333;
+      font-size: 0.9rem;
+      border: 1px solid #dbdbdb;
+    }
+    
+    .button.is-danger:hover {
+      background-color: #e8e8e8;
     }
     
     .spin-button {
@@ -332,6 +341,23 @@
   <div class="container">
     <h1 class="title is-2 main-title">🎡 돌려돌려 돌림판 🎲</h1>
     
+    <!-- 돌림판 섹션 -->
+    <div class="card roulette-card">
+      <div class="roulette">
+        <div class="roulette-bg" id="roulette"></div>
+        <div class="roulette-center"></div>
+      </div>
+      
+      <div class="buttons is-centered">
+        <button class="button is-info spin-button" id="spin">
+          <span class="icon">
+            <i class="fas fa-sync-alt"></i>
+          </span>
+          <span>돌리기</span>
+        </button>
+      </div>
+    </div>
+    
     <!-- 옵션 입력 섹션 -->
     <div class="card">
       <div class="card-content">
@@ -347,36 +373,15 @@
               <span>추가</span>
             </button>
           </div>
-          <div class="control">
-            <button class="button is-danger" id="reset-options">
-              <span class="icon">
-                <i class="fas fa-trash"></i>
-              </span>
-              <span>초기화</span>
-            </button>
-          </div>
         </div>
         
         <div class="options-list" id="options-list">
           <!-- 옵션 목록이 여기에 표시됩니다 -->
         </div>
-      </div>
-    </div>
-    
-    <!-- 돌림판 섹션 -->
-    <div class="card roulette-card">
-      <div class="roulette">
-        <div class="roulette-bg" id="roulette"></div>
-        <div class="roulette-center"></div>
-      </div>
-      
-      <div class="buttons is-centered">
-        <button class="button is-info spin-button" id="spin">
-          <span class="icon">
-            <i class="fas fa-sync-alt"></i>
-          </span>
-          <span>돌리기</span>
-        </button>
+        
+        <div class="has-text-right mt-3">
+          <button class="button is-danger is-small" id="reset-options">초기화</button>
+        </div>
       </div>
     </div>
   </div>
