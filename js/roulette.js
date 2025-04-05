@@ -179,21 +179,14 @@ document.addEventListener('DOMContentLoaded', function() {
       const midAngle = startAngle + segmentSize / 2;
       const radialPosition = 120; // 중심에서 텍스트까지의 거리
       
-      // 텍스트 방향 개선: 항상 읽기 쉬운 방향으로 설정
-      let textRotation = 0;
-      
-      // 텍스트가 위쪽이면 정방향, 아래쪽이면 뒤집힘 방지
-      if (midAngle > 90 && midAngle < 270) {
-        textRotation = midAngle - 180;
-      } else {
-        textRotation = midAngle;
-      }
+      // 텍스트 방향 설정: 중심에서 바깥쪽으로 향하도록
+      // 모든 텍스트가 원의 중심에서 바깥을 향하게 설정
       
       // 텍스트 배치 및 회전 조정
       textElement.style.transform = `
         rotate(${midAngle}deg) 
         translateY(-${radialPosition}px) 
-        rotate(${-textRotation}deg)
+        rotate(-${midAngle}deg)
       `;
       
       roulette.appendChild(textElement);
