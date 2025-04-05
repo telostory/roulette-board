@@ -12,10 +12,13 @@ document.addEventListener('DOMContentLoaded', function() {
   
   let userOptions = [];
   let spinning = false;
-  let currentRotation = 0;
   
-  // 초기 돌림판 상태 - 빈 상태로 시작
-  initEmptyRoulette();
+  // 초기 돌림판 상태 - 비어있는 상태
+  roulette.style.background = '#e0e0e0'; // 회색 배경으로 시작
+  spinButton.disabled = true; // 옵션이 없을 때는 버튼 비활성화
+  spinButton.style.opacity = '0.5';
+  resetButton.disabled = true; // 초기화 버튼도 비활성화
+  resetButton.style.opacity = '0.5';
   
   // 옵션 추가 버튼 클릭 이벤트
   addOptionButton.addEventListener('click', function() {
@@ -29,17 +32,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // 초기화 버튼 클릭 이벤트
+  // 초기화 버튼 클릭 이벤트 - 컨펌 제거
   resetButton.addEventListener('click', function() {
     if (spinning) return; // 회전 중에는 초기화 불가
     if (userOptions.length === 0) return; // 이미 비어있으면 아무 작업도 하지 않음
     
-    if (confirm('모든 옵션을 초기화하시겠습니까?')) {
-      userOptions = [];
-      renderOptionsList();
-      initEmptyRoulette();
-      result.textContent = '';
-    }
+    userOptions = [];
+    renderOptionsList();
+    initEmptyRoulette();
+    result.textContent = '';
   });
   
   // 돌리기 버튼 클릭 이벤트
@@ -54,11 +55,11 @@ document.addEventListener('DOMContentLoaded', function() {
     spinning = true;
     result.textContent = '';
     
-    // 각도 계산 (이전 회전 값에 추가)
+    // 회전값 초기화 - 매번 새롭게 회전하도록 수정
+    // 각도 계산 (고정된 추가 회전 + 랜덤 각도)
     const randomDegrees = Math.floor(Math.random() * 360);
     const extraRotation = 1800; // 추가 회전 (5바퀴)
-    const totalRotation = currentRotation + extraRotation + randomDegrees;
-    currentRotation = totalRotation % 360; // 360도로 정규화
+    const totalRotation = extraRotation + randomDegrees;
     
     // 돌림판 회전 - 가속도 효과 적용
     roulette.style.transition = 'none'; // 기존 트랜지션 제거
@@ -71,7 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // 결과 계산 및 표시
     setTimeout(() => {
       // 화살표가 가리키는 위치 (0도)에서의 결과 계산
-      // 위치 보정: 돌림판이 시계 방향으로 회전하므로 결과는 반시계 방향으로 계산
       const finalAngle = totalRotation % 360; // 최종 회전 각도 (0-360)
       const segmentSize = 360 / userOptions.length;
       
@@ -209,7 +209,10 @@ document.addEventListener('DOMContentLoaded', function() {
       // 텍스트 요소 추가
       const textElement = document.createElement('div');
       textElement.className = 'section-text';
-      textElement.textContent = option;
+      
+      // 텍스트가 긴 경우 줄바꿈 처리
+      const shortOption = shortenText(option);
+      textElement.innerHTML = shortOption;
       textElement.style.position = 'absolute';
       
       // 각 섹션의 중앙에 텍스트 배치
@@ -234,5 +237,19 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 트랜지션 재설정
     roulette.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.27, 0.99)';
+  }
+  
+  // 텍스트 길이 처리 함수
+  function shortenText(text) {
+    if (text.length <= 7) {
+      return text; // 짧은 텍스트는 그대로 반환
+    } else if (text.length <= 14) {
+      // 중간 길이 텍스트는 중간에 줄바꿈 추가
+      const middleIndex = Math.floor(text.length / 2);
+      return text.substring(0, middleIndex) + '<br>' + text.substring(middleIndex);
+    } else {
+      // 긴 텍스트는 처음 13자만 표시하고 말줄임표 추가
+      return text.substring(0, 6) + '<br>' + text.substring(6, 13) + '...';
+    }
   }
 }); 
