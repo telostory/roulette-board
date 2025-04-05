@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let userOptions = [];
   let spinning = false;
   let currentRotation = 0;
+  let activeOptions = defaultOptions; // 현재 활성화된 옵션들
   
   // 초기에 기본 옵션으로 돌림판 생성
   createRouletteWithOptions(defaultOptions);
@@ -34,7 +35,9 @@ document.addEventListener('DOMContentLoaded', function() {
   // 옵션 적용 버튼 클릭 이벤트
   applyOptionsButton.addEventListener('click', function() {
     if (userOptions.length > 0) {
+      activeOptions = [...userOptions]; // 활성 옵션 업데이트
       createRouletteWithOptions(userOptions);
+      console.log('사용자 옵션 적용됨:', userOptions);
     } else {
       alert('최소 1개 이상의 옵션을 추가해주세요!');
     }
@@ -46,8 +49,9 @@ document.addEventListener('DOMContentLoaded', function() {
     spinning = true;
     result.textContent = '';
     
-    // 사용할 옵션 배열 (사용자 옵션이 없으면 기본 옵션 사용)
-    const options = userOptions.length > 0 ? userOptions : defaultOptions;
+    // 사용할 옵션 배열
+    const options = activeOptions;
+    console.log('돌림판 회전 시 사용 옵션:', options);
     
     // 각도 계산 (이전 회전 값에 추가)
     const randomDegrees = Math.floor(Math.random() * 360);
@@ -114,10 +118,15 @@ document.addEventListener('DOMContentLoaded', function() {
       optionItem.appendChild(removeButton);
       optionsList.appendChild(optionItem);
     });
+    
+    // 디버깅용 로그
+    console.log('현재 사용자 옵션 목록:', userOptions);
   }
   
   // 옵션에 따라 돌림판 생성 함수
   function createRouletteWithOptions(options) {
+    console.log('돌림판 생성 시작. 옵션:', options);
+    
     // 돌림판의 배경 그라데이션 설정
     const colors = [
       '#FF6B6B', '#4ECDC4', '#FFE66D', '#1A535C', '#FF9F1C', 
@@ -127,6 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 기존 텍스트 요소 제거
     const existingTexts = roulette.querySelectorAll('.section-text');
     existingTexts.forEach(text => text.remove());
+    console.log('기존 텍스트 요소 제거됨');
     
     // conic-gradient 생성
     let gradient = 'conic-gradient(';
@@ -146,18 +156,24 @@ document.addEventListener('DOMContentLoaded', function() {
       const textElement = document.createElement('div');
       textElement.className = 'section-text';
       textElement.textContent = option;
+      textElement.style.position = 'absolute';
       
       // 각 섹션의 중앙에 텍스트 배치
       const midAngle = startAngle + segmentSize / 2;
       const radialPosition = 120; // 중심에서 텍스트까지의 거리
       
-      // 텍스트 배치 및 회전 조정
+      // 텍스트 배치 및 회전 조정 - 위치 수정
       textElement.style.transform = `rotate(${midAngle}deg) translateY(-${radialPosition}px) rotate(-${midAngle}deg)`;
       
       roulette.appendChild(textElement);
+      console.log(`텍스트 요소 추가됨: ${option}, 각도: ${midAngle}deg`);
     });
     
     gradient += ')';
     roulette.style.background = gradient;
+    console.log('돌림판 배경 설정됨');
+    
+    // 현재 활성화된 옵션 갱신
+    activeOptions = [...options];
   }
 }); 
