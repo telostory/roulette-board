@@ -379,7 +379,7 @@
     /* 모바일 최적화 스타일 */
     @media (max-width: 768px) {
       :root {
-        --roulette-size: 260px;
+        --roulette-size: 280px;
       }
       
       body {
@@ -396,13 +396,13 @@
       }
       
       .main-title {
-        font-size: 1.5rem !important;
+        font-size: 1.8rem !important;
         margin-bottom: 1rem;
         white-space: nowrap;
       }
       
       .roulette {
-        margin: 1rem auto;
+        margin: 1.5rem auto;
       }
       
       .spin-button {
@@ -412,20 +412,21 @@
       }
       
       .input-container {
-        margin-bottom: 0.5rem;
+        margin-bottom: 0;
+        position: relative;
       }
       
       .button-container {
-        position: static !important;
-        transform: none !important;
+        position: absolute !important;
+        right: 0.5rem !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
         display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin-top: 0.5rem;
+        gap: 8px;
       }
       
       .input {
-        padding-right: 1rem;
+        padding-right: 9rem;
         width: 100%;
       }
       
@@ -476,16 +477,27 @@
     /* 작은 모바일 화면용 추가 스타일 */
     @media (max-width: 400px) {
       :root {
-        --roulette-size: 220px;
+        --roulette-size: 250px;
       }
       
       .main-title {
-        font-size: 1.3rem !important;
+        font-size: 1.5rem !important;
       }
       
       .section-text {
         font-size: 12px;
         max-width: 80px;
+      }
+      
+      .input {
+        padding-right: 1rem;
+      }
+      
+      .button-container {
+        position: static !important;
+        transform: none !important;
+        justify-content: center;
+        margin-top: 0.5rem;
       }
     }
   </style>
@@ -530,7 +542,7 @@
   </div>
   
   <!-- 카피라이트 추가 -->
-  <div class="copyright" style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: rgba(73, 57, 44, 0.6); position: fixed; bottom: 1rem; width: 100%; left: 0; background: transparent; z-index: 10;">
+  <div class="copyright" style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: rgba(73, 57, 44, 0.6); position: relative; width: 100%; z-index: 5;">
     © 2025 telo All rights reserved.
   </div>
   
