@@ -10,17 +10,6 @@ export default defineConfig({
     sourcemap: false,
     minify: 'terser',
     assetsDir: 'assets',
-    rollupOptions: {
-      output: {
-        entryFileNames: 'assets/index.js',
-        chunkFileNames: 'assets/[name].js',
-        assetFileNames: 'assets/[name].[ext]'
-      }
-    }
-  },
-  server: {
-    headers: {
-      'Content-Type': 'text/javascript'
-    }
+    emptyOutDir: true
   }
 })
