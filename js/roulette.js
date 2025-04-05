@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // 각 섹션의 중앙에 텍스트 배치
       const midAngle = startAngle + segmentSize / 2;
-      const radialPosition = 120; // 중심에서 텍스트까지의 거리
+      const radialPosition = 90; // 중심에서 텍스트까지의 거리 (120에서 90으로 수정)
       
       // 이미지와 같이 텍스트를 단순히 세로로 표시
       // 섹션 위치로 회전 후 텍스트만 90도 회전
