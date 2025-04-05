@@ -13,11 +13,17 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --main-color: #FF3860;
-      --secondary-color: #3273DC;
-      --accent-color: #FFD166;
-      --background-color: #F2F6FF;
+      --main-color: #5D5FEF;
+      --secondary-color: #2A2B55;
+      --accent-color: #FFB74A;
+      --background-color: #F5F7FA;
       --roulette-size: 300px;
+      --text-color: #2E2E36;
+      --light-text: #FFFFFF;
+      --card-bg: #FFFFFF;
+      --danger-color: #FF5757;
+      --success-color: #34D399;
+      --neutral-color: #A0A3BD;
     }
     
     body {
@@ -29,8 +35,8 @@
       margin: 0;
       padding-top: 40px;
       background-color: var(--background-color);
-      background-image: radial-gradient(#FFD166 1px, transparent 1px),
-                        radial-gradient(#FF3860 1px, transparent 1px);
+      background-image: radial-gradient(var(--accent-color) 1px, transparent 1px),
+                        radial-gradient(var(--main-color) 1px, transparent 1px);
       background-size: 40px 40px;
       background-position: 0 0, 20px 20px;
     }
@@ -65,10 +71,10 @@
     
     .card {
       border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
       overflow: hidden;
       margin-bottom: 2rem;
-      background: white;
+      background: var(--card-bg);
       animation: slideUp 0.5s ease-out;
       padding: 2rem;
     }
@@ -249,7 +255,7 @@
     }
     
     .button.is-primary:hover {
-      background-color: #ff1f4b;
+      background-color: #4B4DDE;
     }
     
     .button.is-info {
@@ -257,24 +263,24 @@
     }
     
     .button.is-info:hover {
-      background-color: #2366d1;
+      background-color: #1F2049;
     }
     
     .button.is-danger {
-      background-color: #ff3860;
-      color: white;
+      background-color: var(--danger-color);
+      color: var(--light-text);
       font-size: 0.9rem;
       border: none;
     }
     
     .button.is-danger:hover {
-      background-color: #ff1443;
+      background-color: #FF3B3B;
     }
     
     /* 초기화 버튼 스타일 */
     .button.reset-button {
-      background-color: #bdbdbd;
-      color: #333;
+      background-color: var(--neutral-color);
+      color: var(--light-text);
       font-size: 0.9rem;
       border: none;
       border-radius: 25px;
@@ -282,7 +288,7 @@
     }
     
     .button.reset-button:hover {
-      background-color: #a0a0a0;
+      background-color: #8A8DB0;
     }
     
     .spin-button {
@@ -291,7 +297,7 @@
       font-size: 1.25rem;
       font-weight: 700;
       border-radius: 25px;
-      box-shadow: 0 4px 12px rgba(50, 115, 220, 0.4);
+      box-shadow: 0 4px 12px rgba(93, 95, 239, 0.3);
       animation: pulse 1.5s infinite;
       transform: scale(1.05);
     }
@@ -356,9 +362,9 @@
     }
     
     @keyframes pulse {
-      0% { transform: scale(1.05); box-shadow: 0 4px 12px rgba(50, 115, 220, 0.4); }
-      50% { transform: scale(1.12); box-shadow: 0 8px 20px rgba(50, 115, 220, 0.6); }
-      100% { transform: scale(1.05); box-shadow: 0 4px 12px rgba(50, 115, 220, 0.4); }
+      0% { transform: scale(1.05); box-shadow: 0 4px 12px rgba(93, 95, 239, 0.3); }
+      50% { transform: scale(1.12); box-shadow: 0 8px 20px rgba(93, 95, 239, 0.5); }
+      100% { transform: scale(1.05); box-shadow: 0 4px 12px rgba(93, 95, 239, 0.3); }
     }
     
     /* 콘페티 캔버스 스타일 */

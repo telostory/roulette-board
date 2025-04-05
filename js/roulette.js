@@ -207,12 +207,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const canvas = document.getElementById('confetti-canvas');
     const myConfetti = confetti.create(canvas, { resize: true });
     
-    // 더 화려한 콘페티 효과 설정
+    // 더 화려한 콘페티 효과 설정 (모던한 색상으로 변경)
     myConfetti({
       particleCount: 150,
       spread: 160,
       origin: { y: 0.6 },
-      colors: ['#FF3860', '#3273DC', '#FFD166', '#23D160', '#209CEE'],
+      colors: ['#5D5FEF', '#2A2B55', '#FFB74A', '#34D399', '#7C8EF4'],
       disableForReducedMotion: true
     });
     
@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
         angle: 60,
         spread: 55,
         origin: { x: 0 },
-        colors: ['#FF3860', '#3273DC', '#FFD166']
+        colors: ['#FF5757', '#5D5FEF', '#FFB74A']
       });
       
       myConfetti({
@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
         angle: 120,
         spread: 55,
         origin: { x: 1 },
-        colors: ['#209CEE', '#FFD166', '#23D160']
+        colors: ['#7C8EF4', '#FFB74A', '#34D399']
       });
     }, 1000);
   }
@@ -336,10 +336,10 @@ document.addEventListener('DOMContentLoaded', function() {
     spinButton.disabled = false;
     resetButton.disabled = false;
     
-    // 색상 배열 - 각 섹션에 다른 색상 적용 (Bulma 색상)
+    // 색상 배열 - 각 섹션에 다른 색상 적용 (모던한 색상으로 변경)
     const colors = [
-      '#FF3860', '#3273DC', '#FFD166', '#23D160', '#209CEE',
-      '#6A67CE', '#FF9F43', '#00D1B2', '#F56565', '#667EEA'
+      '#5D5FEF', '#2A2B55', '#FFB74A', '#34D399', '#7C8EF4',
+      '#A0A3BD', '#FF5757', '#9C6ADE', '#4AC0E0', '#FB7EA8'
     ];
     
     // 기존 텍스트 요소 제거
