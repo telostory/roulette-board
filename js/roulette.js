@@ -180,14 +180,14 @@ document.addEventListener('DOMContentLoaded', function() {
       const midAngle = startAngle + segmentSize / 2;
       const radialPosition = 120; // 중심에서 텍스트까지의 거리
       
-      // 텍스트 방향 설정: 모든 텍스트가 동일한 방향(정방향)으로 표시
-      // 원의 중심에서 볼 때 텍스트가 항상 똑바로 보이도록 함
+      // 이미지와 같이 텍스트 방향 설정: 텍스트가
+      // 원의 반지름을 따라 표시되도록 함 (반지름 방향으로 90도 회전)
       
-      // 텍스트 배치 및 회전 조정
+      // 텍스트 배치 및 회전 조정 - 원의 중심에서 바깥을 향하도록
       textElement.style.transform = `
         rotate(${midAngle}deg) 
         translateY(-${radialPosition}px) 
-        rotate(${-midAngle}deg)
+        rotate(${90 - midAngle}deg)
       `;
       
       roulette.appendChild(textElement);
