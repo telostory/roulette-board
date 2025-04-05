@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const optionText = optionInput.value.trim();
     
     if (optionText && userOptions.length < 10) {
-      // 중복 체크 제거 - 동일한 옵션 입력 허용
+      // 동일한 옵션 입력 허용 (중복 체크 제거)
       userOptions.push(optionText);
       renderOptionsList();
       updateRoulette(); // 옵션 추가 시 즉시 돌림판 업데이트
