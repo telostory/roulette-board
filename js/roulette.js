@@ -24,10 +24,12 @@ document.addEventListener('DOMContentLoaded', function() {
   resetButton.disabled = true; // 초기화 버튼도 비활성화
   resetButton.style.opacity = '0.5';
   
-  // 모달 닫기 버튼 이벤트
-  closeModalButton.addEventListener('click', function() {
-    resultModal.style.display = 'none';
-  });
+  // 모달 닫기 버튼 이벤트 - null 체크 추가
+  if (closeModalButton && resultModal) {
+    closeModalButton.addEventListener('click', function() {
+      resultModal.style.display = 'none';
+    });
+  }
   
   // 옵션 추가 버튼 클릭 이벤트
   addOptionButton.addEventListener('click', function() {
@@ -74,33 +76,45 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const totalRotation = extraRotation + randomDegrees;
     
-    // 돌림판 회전 - 가속도 효과 적용
-    roulette.style.transition = 'none'; // 기존 트랜지션 제거
-    roulette.offsetHeight; // 레이아웃 리플로우 강제
-    roulette.style.transform = 'rotate(0deg)'; // 회전 상태를 0으로 초기화
-    roulette.offsetHeight; // 다시 한번 레이아웃 리플로우 강제
-    
-    // 가속도 있는 트랜지션 적용 (처음엔 빠르게, 나중엔 천천히)
-    roulette.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.27, 0.99)';
-    roulette.style.transform = `rotate(${totalRotation}deg)`;
-    
-    // 결과 계산 및 표시
-    setTimeout(() => {
-      // 화살표가 가리키는 위치 (0도)에서의 결과 계산
-      const finalAngle = totalRotation % 360; // 최종 회전 각도 (0-360)
-      const segmentSize = 360 / userOptions.length;
+    // 돌림판 회전 처리 수정
+    try {
+      // 기존 트랜지션 제거 후 초기화
+      roulette.style.transition = 'none';
+      roulette.style.transform = 'rotate(0deg)';
       
-      // 화살표 위치에서 어떤 세그먼트가 선택되었는지 계산
-      // 화살표는 위(0도)에 고정되어 있고 돌림판이 시계방향으로 회전함
-      let selectedIndex = Math.floor(finalAngle / segmentSize);
-      // 인덱스 반전 제거 - 시계 방향 회전에 맞게 인덱스 계산
-      selectedIndex = userOptions.length - 1 - selectedIndex;
-      if (selectedIndex < 0) selectedIndex += userOptions.length;
+      // 레이아웃 강제 리플로우 (크로스 브라우저 호환성 개선)
+      void roulette.offsetWidth;
       
-      // 결과 애니메이션 표시
-      showResultWithAnimation(userOptions[selectedIndex]);
+      // 가속도 있는 트랜지션 적용
+      roulette.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.27, 0.99)';
+      roulette.style.transform = `rotate(${totalRotation}deg)`;
+      
+      // 결과 계산 및 표시
+      setTimeout(() => {
+        // 화살표가 가리키는 위치 (0도)에서의 결과 계산
+        const finalAngle = totalRotation % 360; // 최종 회전 각도 (0-360)
+        const segmentSize = 360 / userOptions.length;
+        
+        // 화살표 위치에서 어떤 세그먼트가 선택되었는지 계산
+        // 화살표는 위(0도)에 고정되어 있고 돌림판이 시계방향으로 회전함
+        let selectedIndex = Math.floor(finalAngle / segmentSize);
+        // 인덱스 반전 제거 - 시계 방향 회전에 맞게 인덱스 계산
+        selectedIndex = userOptions.length - 1 - selectedIndex;
+        if (selectedIndex < 0) selectedIndex += userOptions.length;
+        
+        // 결과 애니메이션 표시 (null 체크 추가)
+        if (resultModal && resultText) {
+          showResultWithAnimation(userOptions[selectedIndex]);
+        } else {
+          alert(`결과: ${userOptions[selectedIndex]}`);
+        }
+        
+        spinning = false;
+      }, 4000); // 트랜지션 시간과 맞춰줌
+    } catch (error) {
+      console.error('돌림판 회전 중 오류 발생:', error);
       spinning = false;
-    }, 4000); // 트랜지션 시간과 맞춰줌
+    }
   });
   
   // 결과 애니메이션 표시 함수
