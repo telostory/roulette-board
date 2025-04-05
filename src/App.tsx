@@ -279,7 +279,7 @@ function App() {
         {isDarkMode ? <FiSun size={24} /> : <FiMoon size={24} />}
       </ThemeToggleButton>
       
-      <Title isDarkMode={isDarkMode}>행운의 룰렛</Title>
+      <Title isDarkMode={isDarkMode}>🎡 행운의 룰렛 🎲</Title>
       <Roulette options={options} isDarkMode={isDarkMode} />
       
       <ContentContainer isDarkMode={isDarkMode}>
