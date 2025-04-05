@@ -76,6 +76,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const totalRotation = extraRotation + randomDegrees;
     
+    // 회전량에 비례해서 시간 계산
+    const minTime = 3; // 최소 3초
+    const maxTime = 8; // 최대 8초
+    const normalizedRotation = (totalRotation - minRotation) / (maxRotation - minRotation); // 0~1 사이 값
+    const spinTime = minTime + normalizedRotation * (maxTime - minTime); // 회전 시간 (초)
+    
     // 돌림판 회전 처리 수정
     try {
       // 기존 트랜지션 제거 후 초기화
@@ -85,8 +91,8 @@ document.addEventListener('DOMContentLoaded', function() {
       // 레이아웃 강제 리플로우 (크로스 브라우저 호환성 개선)
       void roulette.offsetWidth;
       
-      // 가속도 있는 트랜지션 적용
-      roulette.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.27, 0.99)';
+      // 가속도 있는 트랜지션 적용 (회전량에 비례한 시간 적용)
+      roulette.style.transition = `transform ${spinTime}s cubic-bezier(0.17, 0.67, 0.27, 0.99)`;
       roulette.style.transform = `rotate(${totalRotation}deg)`;
       
       // 결과 계산 및 표시
@@ -110,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         spinning = false;
-      }, 4000); // 트랜지션 시간과 맞춰줌
+      }, spinTime * 1000); // 회전 시간에 맞춰 타이머 설정
     } catch (error) {
       console.error('돌림판 회전 중 오류 발생:', error);
       spinning = false;
