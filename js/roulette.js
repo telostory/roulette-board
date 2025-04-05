@@ -249,20 +249,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const optionText = optionInput.value.trim();
     
     if (optionText && userOptions.length < 10) {
-      if (!userOptions.includes(optionText)) {
-        // 옵션 추가 애니메이션 효과
-        userOptions.push(optionText);
-        renderOptionsList();
-        updateRoulette(); // 옵션 추가 시 즉시 돌림판 업데이트
-        optionInput.value = '';
-        
-        // 첫 번째 옵션이 추가되면 버튼들 활성화
-        if (userOptions.length === 1) {
-          spinButton.disabled = false;
-          resetButton.disabled = false;
-        }
-      } else {
-        showNotification('이미 동일한 옵션이 있습니다!', 'is-warning');
+      // 중복 체크 제거 - 동일한 옵션 입력 허용
+      userOptions.push(optionText);
+      renderOptionsList();
+      updateRoulette(); // 옵션 추가 시 즉시 돌림판 업데이트
+      optionInput.value = '';
+      
+      // 첫 번째 옵션이 추가되면 버튼들 활성화
+      if (userOptions.length === 1) {
+        spinButton.disabled = false;
+        resetButton.disabled = false;
       }
     } else if (userOptions.length >= 10) {
       showNotification('최대 10개까지만 추가할 수 있습니다!', 'is-warning');
