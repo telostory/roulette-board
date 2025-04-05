@@ -249,16 +249,30 @@ document.addEventListener('DOMContentLoaded', function() {
     const optionText = optionInput.value.trim();
     
     if (optionText && userOptions.length < 10) {
-      // 동일한 옵션 입력 허용 (중복 체크 제거)
-      userOptions.push(optionText);
-      renderOptionsList();
-      updateRoulette(); // 옵션 추가 시 즉시 돌림판 업데이트
-      optionInput.value = '';
+      // 쉼표로 구분된 여러 옵션 처리
+      const options = optionText.split(',').map(option => option.trim()).filter(option => option !== '');
       
-      // 첫 번째 옵션이 추가되면 버튼들 활성화
-      if (userOptions.length === 1) {
-        spinButton.disabled = false;
-        resetButton.disabled = false;
+      // 최대 10개까지만 추가
+      const availableSlots = 10 - userOptions.length;
+      const optionsToAdd = options.slice(0, availableSlots);
+      
+      if (optionsToAdd.length > 0) {
+        // 옵션 추가
+        userOptions = [...userOptions, ...optionsToAdd];
+        renderOptionsList();
+        updateRoulette(); // 옵션 추가 시 즉시 돌림판 업데이트
+        optionInput.value = '';
+        
+        // 옵션이 10개를 초과한 경우 알림
+        if (options.length > availableSlots) {
+          showNotification(`최대 10개까지만 추가 가능합니다. ${options.length - availableSlots}개 옵션이 추가되지 않았습니다.`, 'is-warning');
+        }
+        
+        // 첫 번째 옵션이 추가되면 버튼들 활성화
+        if (userOptions.length > 0) {
+          spinButton.disabled = false;
+          resetButton.disabled = false;
+        }
       }
     } else if (userOptions.length >= 10) {
       showNotification('최대 10개까지만 추가할 수 있습니다!', 'is-warning');
