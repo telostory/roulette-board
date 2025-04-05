@@ -5,10 +5,14 @@ document.addEventListener('DOMContentLoaded', function() {
   const roulette = document.getElementById('roulette');
   const spinButton = document.getElementById('spin');
   const resetButton = document.getElementById('reset-options');
-  const result = document.getElementById('result');
   const optionInput = document.getElementById('option-input');
   const addOptionButton = document.getElementById('add-option');
   const optionsList = document.getElementById('options-list');
+  
+  // 결과 모달 관련 요소
+  const resultModal = document.getElementById('result-modal');
+  const resultText = document.getElementById('result-text');
+  const closeModalButton = document.getElementById('close-modal');
   
   let userOptions = [];
   let spinning = false;
@@ -19,6 +23,11 @@ document.addEventListener('DOMContentLoaded', function() {
   spinButton.style.opacity = '0.5';
   resetButton.disabled = true; // 초기화 버튼도 비활성화
   resetButton.style.opacity = '0.5';
+  
+  // 모달 닫기 버튼 이벤트
+  closeModalButton.addEventListener('click', function() {
+    resultModal.style.display = 'none';
+  });
   
   // 옵션 추가 버튼 클릭 이벤트
   addOptionButton.addEventListener('click', function() {
@@ -40,7 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
     userOptions = [];
     renderOptionsList();
     initEmptyRoulette();
-    result.textContent = '';
   });
   
   // 돌리기 버튼 클릭 이벤트
@@ -53,7 +61,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     spinning = true;
-    result.textContent = '';
     
     // 회전값 초기화 - 매번 새롭게 회전하도록 수정
     // 각도 계산 (고정된 추가 회전 + 랜덤 각도)
@@ -92,14 +99,50 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // 결과 애니메이션 표시 함수
   function showResultWithAnimation(selectedOption) {
-    result.textContent = '';
-    result.style.opacity = '0';
+    // 모달에 결과 표시
+    resultText.textContent = selectedOption;
     
+    // 0.5초 후에 모달 표시 (회전이 완전히 끝난 후)
     setTimeout(() => {
-      result.textContent = `결과: ${selectedOption}!`;
-      result.style.transition = 'opacity 0.5s ease-in';
-      result.style.opacity = '1';
-    }, 200);
+      resultModal.style.display = 'flex';
+      
+      // 콘페티 효과 실행
+      launchConfetti();
+    }, 500);
+  }
+  
+  // 콘페티 효과 함수
+  function launchConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    const myConfetti = confetti.create(canvas, { resize: true });
+    
+    // 콘페티 효과 설정
+    myConfetti({
+      particleCount: 150,
+      spread: 160,
+      origin: { y: 0.6 },
+      colors: ['#FF6B6B', '#4ECDC4', '#FFE66D', '#1A535C', '#FF9F1C'],
+      disableForReducedMotion: true
+    });
+    
+    // 추가 콘페티 효과 (1초 후)
+    setTimeout(() => {
+      myConfetti({
+        particleCount: 100,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: ['#FF6B6B', '#4ECDC4', '#FFE66D']
+      });
+      
+      myConfetti({
+        particleCount: 100,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: ['#1A535C', '#FF9F1C', '#4ECDC4']
+      });
+    }, 1000);
   }
   
   // 초기 빈 돌림판 생성
