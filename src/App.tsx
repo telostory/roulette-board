@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styled from '@emotion/styled'
 import Roulette from './components/Roulette'
-import { FiShare2, FiDownload, FiSettings, FiX, FiCopy, FiMoon, FiSun } from 'react-icons/fi'
+import { FiShare2, FiDownload, FiX, FiCopy, FiMoon, FiSun } from 'react-icons/fi'
 
 interface ThemeProps {
   isDarkMode: boolean;
@@ -357,7 +357,6 @@ function App() {
   const [options, setOptions] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [showShareModal, setShowShareModal] = useState(false);
-  const [lastSpinResult, setLastSpinResult] = useState<string | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const urlInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -447,7 +446,7 @@ function App() {
   };
 
   const handleResultUpdate = (result: string) => {
-    setLastSpinResult(result);
+    console.log('결과:', result);
   };
 
   const toggleTheme = () => {

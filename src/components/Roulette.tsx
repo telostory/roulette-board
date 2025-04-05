@@ -201,19 +201,6 @@ const ResultButton = styled.button<ThemeProps>`
   }
 `;
 
-const colors = [
-  '#FFB3C6',  // 연한 핑크
-  '#FF8BA7',  // 진한 핑크
-  '#40C4AA',  // 민트
-  '#4CD6BA',  // 밝은 민트
-  '#FFD1DA',  // 아주 연한 핑크
-  '#FFA5BC',  // 중간 핑크
-  '#33B79B',  // 어두운 민트
-  '#FFE5EC',  // 파스텔 핑크
-  '#59E0C5',  // 밝은 청록
-  '#FF97B7'   // 선명한 핑크
-];
-
 const resultColors = [
   // 라이트 모드 색상
   [
@@ -254,9 +241,9 @@ const Roulette: React.FC<RouletteProps> = ({ options, onResultUpdate, isDarkMode
 
   useEffect(() => {
     // 사운드 효과 초기화
-    spinSoundRef.current = new Audio('/sounds/spin.mp3');
-    resultSoundRef.current = new Audio('/sounds/result.mp3');
-    buttonSoundRef.current = new Audio('/sounds/button-click.mp3');
+    spinSoundRef.current = new Audio('./sounds/spin.mp3');
+    resultSoundRef.current = new Audio('./sounds/result.mp3');
+    buttonSoundRef.current = new Audio('./sounds/button-click.mp3');
     
     // 사운드 효과 볼륨 설정
     if (spinSoundRef.current) spinSoundRef.current.volume = 0.5;
