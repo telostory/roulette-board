@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import styled from '@emotion/styled'
 import Roulette from './components/Roulette'
-import { FiMoon, FiSun } from 'react-icons/fi'
+import { FiShare2, FiDownload, FiX, FiCopy, FiMoon, FiSun } from 'react-icons/fi'
 
 interface ThemeProps {
   isDarkMode: boolean;
@@ -150,46 +150,181 @@ const OptionList = styled.div`
   gap: 0.8rem;
 `;
 
-const OptionItem = styled.div<ThemeProps>`
+const OptionItem = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 1rem;
-  background: ${({isDarkMode}) => isDarkMode 
-    ? 'rgba(30, 41, 59, 0.9)' 
-    : 'rgba(255, 255, 255, 0.9)'};
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 12px;
-  box-shadow: ${({isDarkMode}) => isDarkMode 
-    ? '0 4px 12px rgba(0, 0, 0, 0.3)' 
-    : '0 4px 12px rgba(255, 139, 167, 0.1)'};
+  box-shadow: 0 4px 12px rgba(255, 139, 167, 0.1);
   transition: all 0.2s ease;
 
   &:hover {
     transform: translateX(4px);
-    box-shadow: ${({isDarkMode}) => isDarkMode 
-      ? '0 6px 16px rgba(0, 0, 0, 0.4)' 
-      : '0 6px 16px rgba(255, 139, 167, 0.15)'};
+    box-shadow: 0 6px 16px rgba(255, 139, 167, 0.15);
   }
 `;
 
-const OptionText = styled.span<ThemeProps>`
+const OptionText = styled.span`
   font-size: 1rem;
-  color: ${({isDarkMode}) => isDarkMode ? '#E2E8F0' : '#FF8BA7'};
+  color: #FF8BA7;
   font-weight: 500;
 `;
 
-const DeleteButton = styled.button<ThemeProps>`
+const DeleteButton = styled.button`
   background: none;
   border: none;
-  color: ${({isDarkMode}) => isDarkMode ? '#718096' : '#FFB3C6'};
+  color: #FFB3C6;
   cursor: pointer;
   padding: 0.5rem;
   font-size: 1.2rem;
   transition: all 0.2s ease;
 
   &:hover {
-    color: ${({isDarkMode}) => isDarkMode ? '#E2E8F0' : '#FF8BA7'};
+    color: #FF8BA7;
     transform: scale(1.2) rotate(90deg);
+  }
+`;
+
+const ShareButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.2rem;
+  background: #FF8BA7;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 1rem;
+  box-shadow: 0 4px 12px rgba(255, 139, 167, 0.2);
+
+  &:hover {
+    background: #FFA5BC;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 139, 167, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+`;
+
+const ShareModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+`;
+
+const ShareModal = styled.div`
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+`;
+
+const ShareModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+`;
+
+const ShareModalTitle = styled.h3`
+  font-size: 1.5rem;
+  color: #FF8BA7;
+  margin: 0;
+`;
+
+const CloseButton = styled.button`
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #FF8BA7;
+    transform: rotate(90deg);
+  }
+`;
+
+const ShareOptions = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+`;
+
+const ShareOption = styled.button`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  background: #FFF0F3;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #FFE5EC;
+    transform: translateY(-3px);
+  }
+`;
+
+const ShareIconWrapper = styled.div`
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 50%;
+  margin-bottom: 0.5rem;
+  color: #FF8BA7;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 10px rgba(255, 139, 167, 0.15);
+`;
+
+const ShareOptionText = styled.span`
+  color: #FF8BA7;
+  font-weight: 600;
+`;
+
+const UrlInput = styled.input`
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #FFD1DA;
+  border-radius: 12px;
+  font-size: 1rem;
+  background: white;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  transition: all 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #FF8BA7;
   }
 `;
 
@@ -221,19 +356,37 @@ const ThemeToggleButton = styled.button<ThemeProps>`
 function App() {
   const [options, setOptions] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState('');
+  const [showShareModal, setShowShareModal] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const urlInputRef = useRef<HTMLInputElement | null>(null);
 
-  // 다크 모드 설정 로드
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
       setIsDarkMode(true);
     } else if (savedTheme === null) {
-      // 시스템 설정에 따라 기본 테마 설정
       const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
       setIsDarkMode(prefersDarkMode);
       localStorage.setItem('theme', prefersDarkMode ? 'dark' : 'light');
     }
+  }, []);
+
+  useEffect(() => {
+    const loadOptionsFromURL = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const optionsParam = urlParams.get('options');
+      
+      if (optionsParam) {
+        try {
+          const decodedOptions = decodeURIComponent(optionsParam).split(',');
+          setOptions(decodedOptions.filter(option => option.trim() !== ''));
+        } catch (error) {
+          console.error('URL 파라미터 파싱 오류:', error);
+        }
+      }
+    };
+    
+    loadOptionsFromURL();
   }, []);
 
   const handleAddOption = () => {
@@ -263,6 +416,39 @@ function App() {
     setInputValue('');
   };
 
+  const handleShare = () => {
+    setShowShareModal(true);
+  };
+
+  const handleCloseShareModal = () => {
+    setShowShareModal(false);
+  };
+
+  const handleCopyLink = () => {
+    if (urlInputRef.current) {
+      urlInputRef.current.select();
+      document.execCommand('copy');
+      alert('링크가 복사되었습니다!');
+    }
+  };
+
+  const handleDownloadImage = () => {
+    alert('이미지 다운로드 기능은 곧 추가될 예정입니다!');
+  };
+
+  const generateShareURL = () => {
+    if (options.length > 0) {
+      const baseUrl = window.location.origin + window.location.pathname;
+      const encodedOptions = encodeURIComponent(options.join(','));
+      return `${baseUrl}?options=${encodedOptions}`;
+    }
+    return window.location.href;
+  };
+
+  const handleResultUpdate = (result: string) => {
+    console.log('결과:', result);
+  };
+
   const toggleTheme = () => {
     const newTheme = !isDarkMode;
     setIsDarkMode(newTheme);
@@ -280,7 +466,7 @@ function App() {
       </ThemeToggleButton>
       
       <Title isDarkMode={isDarkMode}>행운의 룰렛</Title>
-      <Roulette options={options} isDarkMode={isDarkMode} />
+      <Roulette options={options} onResultUpdate={handleResultUpdate} isDarkMode={isDarkMode} />
       
       <ContentContainer isDarkMode={isDarkMode}>
         <InputContainer isDarkMode={isDarkMode}>
@@ -298,15 +484,58 @@ function App() {
           </ButtonContainer>
         </InputContainer>
         
+        {options.length > 0 && (
+          <ShareButton onClick={handleShare}>
+            <FiShare2 />
+            공유하기
+          </ShareButton>
+        )}
+        
         <OptionList>
           {options.map((option, index) => (
-            <OptionItem key={index} isDarkMode={isDarkMode}>
-              <OptionText isDarkMode={isDarkMode}>{option}</OptionText>
-              <DeleteButton onClick={() => handleDeleteOption(index)} isDarkMode={isDarkMode}>×</DeleteButton>
+            <OptionItem key={index}>
+              <OptionText>{option}</OptionText>
+              <DeleteButton onClick={() => handleDeleteOption(index)}>×</DeleteButton>
             </OptionItem>
           ))}
         </OptionList>
       </ContentContainer>
+
+      {showShareModal && (
+        <ShareModalOverlay>
+          <ShareModal>
+            <ShareModalHeader>
+              <ShareModalTitle>룰렛 공유하기</ShareModalTitle>
+              <CloseButton onClick={handleCloseShareModal}>
+                <FiX />
+              </CloseButton>
+            </ShareModalHeader>
+            
+            <ShareOptions>
+              <ShareOption onClick={handleCopyLink}>
+                <ShareIconWrapper>
+                  <FiCopy />
+                </ShareIconWrapper>
+                <ShareOptionText>링크 복사</ShareOptionText>
+              </ShareOption>
+              
+              <ShareOption onClick={handleDownloadImage}>
+                <ShareIconWrapper>
+                  <FiDownload />
+                </ShareIconWrapper>
+                <ShareOptionText>이미지 저장</ShareOptionText>
+              </ShareOption>
+            </ShareOptions>
+            
+            <UrlInput
+              ref={urlInputRef}
+              value={generateShareURL()}
+              readOnly
+              onClick={(e) => (e.target as HTMLInputElement).select()}
+            />
+          </ShareModal>
+        </ShareModalOverlay>
+      )}
     </Container>
   )
 }
