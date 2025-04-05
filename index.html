@@ -90,6 +90,7 @@
       border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s;
+      margin: 5px;
     }
     
     button:hover {
@@ -101,15 +102,103 @@
       font-size: 18px;
       min-height: 27px;
     }
+    
+    .options-form {
+      margin-bottom: 20px;
+    }
+    
+    .option-input {
+      display: flex;
+      margin-bottom: 10px;
+      justify-content: center;
+    }
+    
+    .option-input input {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      width: 70%;
+      margin-right: 10px;
+    }
+    
+    .option-input button {
+      padding: 8px 15px;
+    }
+    
+    .options-list {
+      max-height: 200px;
+      overflow-y: auto;
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #eee;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+    
+    .option-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .option-item:last-child {
+      border-bottom: none;
+    }
+    
+    .remove-btn {
+      background-color: #ff6b6b;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      padding: 2px 6px;
+      font-size: 12px;
+    }
+    
+    .remove-btn:hover {
+      background-color: #ee5253;
+    }
+    
+    .section-text {
+      position: absolute;
+      transform-origin: center;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>🎡 돌려돌려 돌림판 🎲</h1>
+    
+    <div class="options-form">
+      <h3>옵션 추가하기 (최대 10개)</h3>
+      
+      <div class="option-input">
+        <input type="text" id="option-input" placeholder="옵션을 입력하세요" maxlength="20">
+        <button id="add-option">추가</button>
+      </div>
+      
+      <div class="options-list" id="options-list">
+        <!-- 옵션 목록이 여기에 표시됩니다 -->
+      </div>
+      
+      <button id="apply-options">옵션 적용하기</button>
+    </div>
+    
     <div class="roulette">
       <div class="roulette-bg" id="roulette"></div>
       <div class="roulette-center"></div>
     </div>
+    
     <button id="spin">돌리기</button>
     <div class="result" id="result"></div>
   </div>
