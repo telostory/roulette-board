@@ -64,6 +64,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // 돌림판 회전 - 가속도 효과 적용
     roulette.style.transition = 'none'; // 기존 트랜지션 제거
     roulette.offsetHeight; // 레이아웃 리플로우 강제
+    roulette.style.transform = 'rotate(0deg)'; // 회전 상태를 0으로 초기화
+    roulette.offsetHeight; // 다시 한번 레이아웃 리플로우 강제
     
     // 가속도 있는 트랜지션 적용 (처음엔 빠르게, 나중엔 천천히)
     roulette.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.27, 0.99)';
