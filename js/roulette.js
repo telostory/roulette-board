@@ -44,17 +44,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const randomDegrees = Math.floor(Math.random() * 360);
     const extraRotation = 1800; // 추가 회전 (5바퀴)
     const totalRotation = currentRotation + extraRotation + randomDegrees;
-    currentRotation = totalRotation;
+    currentRotation = totalRotation % 360; // 360도로 정규화
     
     // 돌림판 회전
     roulette.style.transform = `rotate(${totalRotation}deg)`;
     
     // 결과 계산 및 표시
     setTimeout(() => {
-      const normalizedDegrees = randomDegrees;
+      // 화살표가 가리키는 위치 (0도)에서의 결과 계산
+      // 위치 보정: 돌림판이 시계 방향으로 회전하므로 결과는 반시계 방향으로 계산
+      const finalAngle = totalRotation % 360; // 최종 회전 각도 (0-360)
       const segmentSize = 360 / userOptions.length;
-      let selectedIndex = Math.floor((360 - normalizedDegrees) / segmentSize);
-      if (selectedIndex >= userOptions.length) selectedIndex = 0;
+      
+      // 화살표 위치에서 어떤 세그먼트가 선택되었는지 계산
+      // 화살표는 위(0도)에 고정되어 있고 돌림판이 시계방향으로 회전함
+      let selectedIndex = Math.floor(finalAngle / segmentSize);
+      // 인덱스 반전 (시계 방향 회전, 반시계 방향 인덱스)
+      selectedIndex = (userOptions.length - selectedIndex) % userOptions.length;
       
       result.textContent = `결과: ${userOptions[selectedIndex]}!`;
       spinning = false;
@@ -173,8 +179,22 @@ document.addEventListener('DOMContentLoaded', function() {
       const midAngle = startAngle + segmentSize / 2;
       const radialPosition = 120; // 중심에서 텍스트까지의 거리
       
+      // 텍스트 방향 개선: 항상 읽기 쉬운 방향으로 설정
+      let textRotation = 0;
+      
+      // 텍스트가 위쪽이면 정방향, 아래쪽이면 뒤집힘 방지
+      if (midAngle > 90 && midAngle < 270) {
+        textRotation = midAngle - 180;
+      } else {
+        textRotation = midAngle;
+      }
+      
       // 텍스트 배치 및 회전 조정
-      textElement.style.transform = `rotate(${midAngle}deg) translateY(-${radialPosition}px) rotate(-${midAngle}deg)`;
+      textElement.style.transform = `
+        rotate(${midAngle}deg) 
+        translateY(-${radialPosition}px) 
+        rotate(${-textRotation}deg)
+      `;
       
       roulette.appendChild(textElement);
     });
