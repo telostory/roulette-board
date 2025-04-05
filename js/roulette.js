@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
     userOptions = [];
     renderOptionsList();
     initEmptyRoulette();
+    optionsList.style.display = 'none'; // 옵션 목록 숨김
   });
   
   // 돌리기 버튼 클릭 이벤트
@@ -194,35 +195,44 @@ document.addEventListener('DOMContentLoaded', function() {
   function renderOptionsList() {
     optionsList.innerHTML = '';
     
-    userOptions.forEach((option, index) => {
-      const optionItem = document.createElement('div');
-      optionItem.className = 'option-item';
+    // 옵션이 있을 때만 옵션 목록 표시
+    if (userOptions.length > 0) {
+      optionsList.style.display = 'block';
       
-      const optionText = document.createElement('span');
-      optionText.textContent = option;
-      
-      const removeButton = document.createElement('button');
-      removeButton.className = 'remove-btn';
-      removeButton.textContent = '삭제';
-      removeButton.onclick = function() {
-        userOptions.splice(index, 1);
-        renderOptionsList();
-        updateRoulette(); // 옵션 삭제 시 즉시 돌림판 업데이트
+      userOptions.forEach((option, index) => {
+        const optionItem = document.createElement('div');
+        optionItem.className = 'option-item';
         
-        // 모든 옵션이 삭제되면 버튼들 비활성화
-        if (userOptions.length === 0) {
-          spinButton.disabled = true;
-          spinButton.style.opacity = '0.5';
-          resetButton.disabled = true;
-          resetButton.style.opacity = '0.5';
-          initEmptyRoulette();
-        }
-      };
-      
-      optionItem.appendChild(optionText);
-      optionItem.appendChild(removeButton);
-      optionsList.appendChild(optionItem);
-    });
+        const optionText = document.createElement('span');
+        optionText.textContent = option;
+        
+        const removeButton = document.createElement('button');
+        removeButton.className = 'remove-btn';
+        removeButton.textContent = '삭제';
+        removeButton.onclick = function() {
+          userOptions.splice(index, 1);
+          renderOptionsList();
+          updateRoulette(); // 옵션 삭제 시 즉시 돌림판 업데이트
+          
+          // 모든 옵션이 삭제되면 버튼들 비활성화
+          if (userOptions.length === 0) {
+            spinButton.disabled = true;
+            spinButton.style.opacity = '0.5';
+            resetButton.disabled = true;
+            resetButton.style.opacity = '0.5';
+            initEmptyRoulette();
+            optionsList.style.display = 'none'; // 옵션 목록 숨김
+          }
+        };
+        
+        optionItem.appendChild(optionText);
+        optionItem.appendChild(removeButton);
+        optionsList.appendChild(optionItem);
+      });
+    } else {
+      // 옵션이 없으면 옵션 목록 숨김
+      optionsList.style.display = 'none';
+    }
   }
   
   // 돌림판 업데이트 함수
