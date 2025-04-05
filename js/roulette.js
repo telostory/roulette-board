@@ -8,17 +8,13 @@ document.addEventListener('DOMContentLoaded', function() {
   const optionInput = document.getElementById('option-input');
   const addOptionButton = document.getElementById('add-option');
   const optionsList = document.getElementById('options-list');
-  const applyOptionsButton = document.getElementById('apply-options');
   
-  // 기본 옵션들 (사용자가 옵션을 추가하지 않은 경우 사용)
-  const defaultOptions = ['빨강', '청록', '노랑', '남색', '주황'];
   let userOptions = [];
   let spinning = false;
   let currentRotation = 0;
-  let activeOptions = defaultOptions; // 현재 활성화된 옵션들
   
-  // 초기에 기본 옵션으로 돌림판 생성
-  createRouletteWithOptions(defaultOptions);
+  // 초기 돌림판 상태 - 빈 상태로 시작
+  initEmptyRoulette();
   
   // 옵션 추가 버튼 클릭 이벤트
   addOptionButton.addEventListener('click', function() {
@@ -32,26 +28,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // 옵션 적용 버튼 클릭 이벤트
-  applyOptionsButton.addEventListener('click', function() {
-    if (userOptions.length > 0) {
-      activeOptions = [...userOptions]; // 활성 옵션 업데이트
-      createRouletteWithOptions(userOptions);
-      console.log('사용자 옵션 적용됨:', userOptions);
-    } else {
-      alert('최소 1개 이상의 옵션을 추가해주세요!');
-    }
-  });
-  
   // 돌리기 버튼 클릭 이벤트
   spinButton.addEventListener('click', function() {
     if (spinning) return;
+    
+    if (userOptions.length === 0) {
+      alert('최소 1개 이상의 옵션을 추가해주세요!');
+      return;
+    }
+    
     spinning = true;
     result.textContent = '';
-    
-    // 사용할 옵션 배열
-    const options = activeOptions;
-    console.log('돌림판 회전 시 사용 옵션:', options);
     
     // 각도 계산 (이전 회전 값에 추가)
     const randomDegrees = Math.floor(Math.random() * 360);
@@ -65,14 +52,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // 결과 계산 및 표시
     setTimeout(() => {
       const normalizedDegrees = randomDegrees;
-      const segmentSize = 360 / options.length;
+      const segmentSize = 360 / userOptions.length;
       let selectedIndex = Math.floor((360 - normalizedDegrees) / segmentSize);
-      if (selectedIndex >= options.length) selectedIndex = 0;
+      if (selectedIndex >= userOptions.length) selectedIndex = 0;
       
-      result.textContent = `결과: ${options[selectedIndex]}!`;
+      result.textContent = `결과: ${userOptions[selectedIndex]}!`;
       spinning = false;
     }, 3000);
   });
+  
+  // 초기 빈 돌림판 생성
+  function initEmptyRoulette() {
+    roulette.style.background = '#e0e0e0'; // 회색 배경으로 시작
+    spinButton.disabled = true; // 옵션이 없을 때는 버튼 비활성화
+    spinButton.style.opacity = '0.5';
+  }
   
   // 옵션 추가 함수
   function addOption() {
@@ -82,7 +76,14 @@ document.addEventListener('DOMContentLoaded', function() {
       if (!userOptions.includes(optionText)) {
         userOptions.push(optionText);
         renderOptionsList();
+        updateRoulette(); // 옵션 추가 시 즉시 돌림판 업데이트
         optionInput.value = '';
+        
+        // 첫 번째 옵션이 추가되면 돌리기 버튼 활성화
+        if (userOptions.length === 1) {
+          spinButton.disabled = false;
+          spinButton.style.opacity = '1';
+        }
       } else {
         alert('이미 동일한 옵션이 있습니다!');
       }
@@ -112,6 +113,14 @@ document.addEventListener('DOMContentLoaded', function() {
       removeButton.onclick = function() {
         userOptions.splice(index, 1);
         renderOptionsList();
+        updateRoulette(); // 옵션 삭제 시 즉시 돌림판 업데이트
+        
+        // 모든 옵션이 삭제되면 돌리기 버튼 비활성화
+        if (userOptions.length === 0) {
+          spinButton.disabled = true;
+          spinButton.style.opacity = '0.5';
+          initEmptyRoulette();
+        }
       };
       
       optionItem.appendChild(optionText);
@@ -123,9 +132,12 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('현재 사용자 옵션 목록:', userOptions);
   }
   
-  // 옵션에 따라 돌림판 생성 함수
-  function createRouletteWithOptions(options) {
-    console.log('돌림판 생성 시작. 옵션:', options);
+  // 돌림판 업데이트 함수
+  function updateRoulette() {
+    if (userOptions.length === 0) {
+      initEmptyRoulette();
+      return;
+    }
     
     // 돌림판의 배경 그라데이션 설정
     const colors = [
@@ -136,19 +148,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // 기존 텍스트 요소 제거
     const existingTexts = roulette.querySelectorAll('.section-text');
     existingTexts.forEach(text => text.remove());
-    console.log('기존 텍스트 요소 제거됨');
     
     // conic-gradient 생성
     let gradient = 'conic-gradient(';
-    const segmentSize = 360 / options.length;
+    const segmentSize = 360 / userOptions.length;
     
-    options.forEach((option, index) => {
+    userOptions.forEach((option, index) => {
       const startAngle = index * segmentSize;
       const endAngle = (index + 1) * segmentSize;
       const color = colors[index % colors.length];
       
       gradient += `${color} ${startAngle}deg ${endAngle}deg`;
-      if (index < options.length - 1) {
+      if (index < userOptions.length - 1) {
         gradient += ', ';
       }
       
@@ -162,18 +173,13 @@ document.addEventListener('DOMContentLoaded', function() {
       const midAngle = startAngle + segmentSize / 2;
       const radialPosition = 120; // 중심에서 텍스트까지의 거리
       
-      // 텍스트 배치 및 회전 조정 - 위치 수정
+      // 텍스트 배치 및 회전 조정
       textElement.style.transform = `rotate(${midAngle}deg) translateY(-${radialPosition}px) rotate(-${midAngle}deg)`;
       
       roulette.appendChild(textElement);
-      console.log(`텍스트 요소 추가됨: ${option}, 각도: ${midAngle}deg`);
     });
     
     gradient += ')';
     roulette.style.background = gradient;
-    console.log('돌림판 배경 설정됨');
-    
-    // 현재 활성화된 옵션 갱신
-    activeOptions = [...options];
   }
 }); 
