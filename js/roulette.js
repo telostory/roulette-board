@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
   console.log('DOM Content Loaded - roulette.js');
   const roulette = document.getElementById('roulette');
   const spinButton = document.getElementById('spin');
+  const resetButton = document.getElementById('reset-options');
   const result = document.getElementById('result');
   const optionInput = document.getElementById('option-input');
   const addOptionButton = document.getElementById('add-option');
@@ -28,6 +29,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
+  // 초기화 버튼 클릭 이벤트
+  resetButton.addEventListener('click', function() {
+    if (spinning) return; // 회전 중에는 초기화 불가
+    if (userOptions.length === 0) return; // 이미 비어있으면 아무 작업도 하지 않음
+    
+    if (confirm('모든 옵션을 초기화하시겠습니까?')) {
+      userOptions = [];
+      renderOptionsList();
+      initEmptyRoulette();
+      result.textContent = '';
+    }
+  });
+  
   // 돌리기 버튼 클릭 이벤트
   spinButton.addEventListener('click', function() {
     if (spinning) return;
@@ -46,7 +60,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const totalRotation = currentRotation + extraRotation + randomDegrees;
     currentRotation = totalRotation % 360; // 360도로 정규화
     
-    // 돌림판 회전
+    // 돌림판 회전 - 가속도 효과 적용
+    roulette.style.transition = 'none'; // 기존 트랜지션 제거
+    roulette.offsetHeight; // 레이아웃 리플로우 강제
+    
+    // 가속도 있는 트랜지션 적용 (처음엔 빠르게, 나중엔 천천히)
+    roulette.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.27, 0.99)';
     roulette.style.transform = `rotate(${totalRotation}deg)`;
     
     // 결과 계산 및 표시
@@ -63,16 +82,32 @@ document.addEventListener('DOMContentLoaded', function() {
       selectedIndex = userOptions.length - 1 - selectedIndex;
       if (selectedIndex < 0) selectedIndex += userOptions.length;
       
-      result.textContent = `결과: ${userOptions[selectedIndex]}!`;
+      // 결과 애니메이션 표시
+      showResultWithAnimation(userOptions[selectedIndex]);
       spinning = false;
-    }, 3000);
+    }, 4000); // 트랜지션 시간과 맞춰줌
   });
+  
+  // 결과 애니메이션 표시 함수
+  function showResultWithAnimation(selectedOption) {
+    result.textContent = '';
+    result.style.opacity = '0';
+    
+    setTimeout(() => {
+      result.textContent = `결과: ${selectedOption}!`;
+      result.style.transition = 'opacity 0.5s ease-in';
+      result.style.opacity = '1';
+    }, 200);
+  }
   
   // 초기 빈 돌림판 생성
   function initEmptyRoulette() {
     roulette.style.background = '#e0e0e0'; // 회색 배경으로 시작
+    roulette.innerHTML = ''; // 모든 텍스트 제거
     spinButton.disabled = true; // 옵션이 없을 때는 버튼 비활성화
     spinButton.style.opacity = '0.5';
+    resetButton.disabled = true; // 초기화 버튼도 비활성화
+    resetButton.style.opacity = '0.5';
   }
   
   // 옵션 추가 함수
@@ -86,10 +121,12 @@ document.addEventListener('DOMContentLoaded', function() {
         updateRoulette(); // 옵션 추가 시 즉시 돌림판 업데이트
         optionInput.value = '';
         
-        // 첫 번째 옵션이 추가되면 돌리기 버튼 활성화
+        // 첫 번째 옵션이 추가되면 버튼들 활성화
         if (userOptions.length === 1) {
           spinButton.disabled = false;
           spinButton.style.opacity = '1';
+          resetButton.disabled = false;
+          resetButton.style.opacity = '1';
         }
       } else {
         alert('이미 동일한 옵션이 있습니다!');
@@ -122,10 +159,12 @@ document.addEventListener('DOMContentLoaded', function() {
         renderOptionsList();
         updateRoulette(); // 옵션 삭제 시 즉시 돌림판 업데이트
         
-        // 모든 옵션이 삭제되면 돌리기 버튼 비활성화
+        // 모든 옵션이 삭제되면 버튼들 비활성화
         if (userOptions.length === 0) {
           spinButton.disabled = true;
           spinButton.style.opacity = '0.5';
+          resetButton.disabled = true;
+          resetButton.style.opacity = '0.5';
           initEmptyRoulette();
         }
       };
@@ -134,9 +173,6 @@ document.addEventListener('DOMContentLoaded', function() {
       optionItem.appendChild(removeButton);
       optionsList.appendChild(optionItem);
     });
-    
-    // 디버깅용 로그
-    console.log('현재 사용자 옵션 목록:', userOptions);
   }
   
   // 돌림판 업데이트 함수
@@ -195,5 +231,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     gradient += ')';
     roulette.style.background = gradient;
+    
+    // 트랜지션 재설정
+    roulette.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.27, 0.99)';
   }
 }); 

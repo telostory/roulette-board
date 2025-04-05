@@ -97,6 +97,14 @@
       background-color: #1A535C;
     }
     
+    .reset-btn {
+      background-color: #FF6B6B;
+    }
+    
+    .reset-btn:hover {
+      background-color: #ee5253;
+    }
+    
     .result {
       margin-top: 20px;
       font-size: 18px;
@@ -177,10 +185,16 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      background-color: rgba(0, 0, 0, 0.4);
       padding: 2px 6px;
       border-radius: 10px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -207,7 +221,10 @@
       <div class="roulette-center"></div>
     </div>
     
-    <button id="spin">돌리기</button>
+    <div class="button-container">
+      <button id="spin">돌리기</button>
+      <button id="reset-options" class="reset-btn">초기화</button>
+    </div>
     <div class="result" id="result"></div>
   </div>
 
