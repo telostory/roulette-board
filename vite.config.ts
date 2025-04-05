@@ -12,7 +12,11 @@ export default defineConfig({
     minify: 'terser',
     assetsDir: 'assets',
     emptyOutDir: true,
-    copyPublicDir: true
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html')
+      }
+    }
   },
   resolve: {
     alias: {
