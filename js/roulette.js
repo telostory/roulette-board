@@ -284,6 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
       userOptions.forEach((option, index) => {
         const optionItem = document.createElement('div');
         optionItem.className = 'option-item';
+        optionItem.style.animation = 'slideUp 0.3s ease-out forwards';
         
         const optionText = document.createElement('span');
         optionText.textContent = option;
