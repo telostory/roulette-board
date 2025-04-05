@@ -262,16 +262,14 @@ document.addEventListener('DOMContentLoaded', function() {
         renderOptionsList();
         updateRoulette(); // 옵션 추가 시 즉시 돌림판 업데이트
         
-        // 한글 입력 문제 해결을 위한 수정 (입력창 초기화 및 포커스 처리)
-        // 1. 포커스 제거 후 값 초기화
-        optionInput.blur();
-        // 2. setTimeout으로 비동기 처리하여 한글 조합 완료 후 초기화
+        // 한글 입력 문제 해결을 위한 수정
+        // blur() 호출 제거하고 setTimeout만 사용하여 값 초기화
+        // 이렇게 하면 키보드 포커스가 유지됨
         setTimeout(() => {
           optionInput.value = '';
-          // 3. 약간의 지연 후 다시 포커스
-          setTimeout(() => {
-            optionInput.focus();
-          }, 50);
+          
+          // 선택 위치 초기화 (커서 위치 시작으로)
+          optionInput.setSelectionRange(0, 0);
         }, 10);
         
         // 옵션이 10개를 초과한 경우 알림
