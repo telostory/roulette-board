@@ -173,6 +173,11 @@
       height: 3rem;
     }
     
+    .input:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 0.125em rgba(255, 209, 102, 0.25);
+    }
+    
     .button.is-rounded {
       border-radius: 50px;
     }
@@ -259,11 +264,12 @@
     }
     
     .button.is-info {
-      background-color: var(--secondary-color);
+      background-color: var(--accent-color);
+      color: var(--text-color);
     }
     
     .button.is-info:hover {
-      background-color: #964B2C;
+      background-color: #F9C149;
     }
     
     .button.is-danger {
@@ -297,7 +303,7 @@
       font-size: 1.25rem;
       font-weight: 700;
       border-radius: 25px;
-      box-shadow: 0 4px 12px rgba(255, 126, 95, 0.3);
+      box-shadow: 0 4px 12px rgba(255, 209, 102, 0.3);
       animation: pulse 1.5s infinite;
       transform: scale(1.05);
     }
@@ -362,9 +368,9 @@
     }
     
     @keyframes pulse {
-      0% { transform: scale(1.05); box-shadow: 0 4px 12px rgba(255, 126, 95, 0.3); }
-      50% { transform: scale(1.12); box-shadow: 0 8px 20px rgba(255, 126, 95, 0.5); }
-      100% { transform: scale(1.05); box-shadow: 0 4px 12px rgba(255, 126, 95, 0.3); }
+      0% { transform: scale(1.05); box-shadow: 0 4px 12px rgba(255, 209, 102, 0.3); }
+      50% { transform: scale(1.12); box-shadow: 0 8px 20px rgba(255, 209, 102, 0.5); }
+      100% { transform: scale(1.05); box-shadow: 0 4px 12px rgba(255, 209, 102, 0.3); }
     }
     
     /* 콘페티 캔버스 스타일 */
