@@ -423,10 +423,11 @@
         transform: translateY(-50%) !important;
         display: flex;
         gap: 8px;
+        z-index: 10;
       }
       
       .input {
-        padding-right: 9rem;
+        padding-right: 11rem;
         width: 100%;
       }
       
@@ -499,6 +500,7 @@
         justify-content: center;
         margin-top: 0.5rem;
         z-index: 10;
+        width: 100%;
       }
       
       .button.add-button, 
@@ -531,13 +533,13 @@
       
       <!-- 옵션 입력 섹션 -->
       <div class="field">
-        <div class="control input-container" style="position: relative;">
+        <div class="control input-container" style="position: relative; margin-bottom: 0.5rem;">
           <input class="input" type="text" id="option-input" placeholder="옵션 입력(최대 10개)" maxlength="20">
           <div class="button-container" style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); display: flex; gap: 8px; z-index: 10;">
-            <button class="button is-primary is-rounded add-button" id="add-option" style="height: 2.4rem; padding: 0 1rem;">
+            <button class="button is-primary is-rounded add-button" id="add-option" style="height: 2.4rem; padding: 0 1rem; margin: 0;">
               <span>추가</span>
             </button>
-            <button class="button reset-button is-rounded" id="reset-options" style="height: 2.4rem; padding: 0 1rem; margin-top: 0;">초기화</button>
+            <button class="button reset-button is-rounded" id="reset-options" style="height: 2.4rem; padding: 0 1rem; margin: 0;">초기화</button>
           </div>
         </div>
       </div>
